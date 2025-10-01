@@ -1,0 +1,1 @@
+// Aqui van funciones que traducen estados o textos a español

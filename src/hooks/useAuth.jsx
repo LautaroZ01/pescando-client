@@ -1,0 +1,1 @@
+// Hook para obtener los datos del usuario autenticado
