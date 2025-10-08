@@ -4,6 +4,8 @@ import { autheticateUser } from "../../API/AuthAPI";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
 export default function LoginView() {
   const defaultValues = {
@@ -27,57 +29,66 @@ export default function LoginView() {
   const handleLogin = (formData) => mutate(formData)
 
   return (
-    <form
-      onSubmit={handleSubmit(handleLogin)}
-      className="space-y-8 p-10 mt-10 bg-white"
-      noValidate
-    >
-      <div className="flex flex-col gap-5">
-        <label
-          className="font-normal text-2xl"
-        >Email</label>
+    <>
+      <form
+        onSubmit={handleSubmit(handleLogin)}
+        className="space-y-8 p-10 mt-10 bg-white"
+        noValidate
+      >
+        <div className="flex flex-col gap-5">
+          <label
+            className="font-normal text-2xl"
+          >Email</label>
 
-        <input
-          id="email"
-          type="email"
-          placeholder="Email de Registro"
-          className="input-style"
-          {...register("email", {
-            required: "El Email es obligatorio",
-            pattern: {
-              value: /\S+@\S+\.\S+/,
-              message: "E-mail no válido",
-            },
-          })}
-        />
-        {errors.email && (
-          <ErrorMessage>{errors.email.message}</ErrorMessage>
-        )}
-      </div>
+          <input
+            id="email"
+            type="email"
+            placeholder="Email de Registro"
+            className="input-style"
+            {...register("email", {
+              required: "El Email es obligatorio",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "E-mail no válido",
+              },
+            })}
+          />
+          {errors.email && (
+            <ErrorMessage>{errors.email.message}</ErrorMessage>
+          )}
+        </div>
 
-      <div className="flex flex-col gap-5">
-        <label
-          className="font-normal text-2xl"
-        >Password</label>
+        <div className="flex flex-col gap-5">
+          <label
+            className="font-normal text-2xl"
+          >Password</label>
 
-        <input
-          type="password"
-          placeholder="Password de Registro"
-          className="input-style"
-          {...register("password", {
-            required: "El Password es obligatorio",
-          })}
-        />
-        {errors.password && (
-          <ErrorMessage>{errors.password.message}</ErrorMessage>
-        )}
-      </div>
+          <input
+            type="password"
+            placeholder="Password de Registro"
+            className="input-style"
+            {...register("password", {
+              required: "El Password es obligatorio",
+            })}
+          />
+          {errors.password && (
+            <ErrorMessage>{errors.password.message}</ErrorMessage>
+          )}
+        </div>
 
-      <button
-        type="submit"
-        className="cursor-pointer"
-      >Iniciar Sesión</button>
+        <button
+          type="submit"
+          className="cursor-pointer"
+        >Iniciar Sesión</button>
+      </form>
 
-    </form>
+      <Link
+        to={'http://localhost:3000/api/auth/google'}
+        className="flex items-center justify-center w-full space-x-2 bg-gray-100 border border-gray-200 hover:bg-gray-200 px-4 py-2 rounded-md"
+      >
+        <FcGoogle />
+        <p className="font-bold text-sm text-gray-500">Google</p>
+      </Link>
+    </>
   )
 }
