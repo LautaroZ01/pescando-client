@@ -3,17 +3,15 @@ import { useAuth } from '../hooks/useAuth'
 import Loader from '../components/ui/Loader'
 
 export default function AuthLayout() {
-    const {data, isLoading} = useAuth()
-    
-    if(isLoading) return <Loader />
+    const { data, isLoading } = useAuth()
 
-    if(data) return <Navigate to='/' />
+    if (isLoading) return <Loader />
+
+    if (data) return <Navigate to='/' />
 
     return (
-        <main className='min-h-screen flex items-center justify-center p-4'>
-            <div>
-                <Outlet />
-            </div>
+        <main className='min-h-screen flex items-center justify-center p-4 bg-gray-200'>
+            <Outlet />
         </main>
     )
 }

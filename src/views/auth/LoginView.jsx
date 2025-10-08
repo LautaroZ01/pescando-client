@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import { MdEmail } from "react-icons/md";
+import { FaFingerprint } from "react-icons/fa";
 
 export default function LoginView() {
   const defaultValues = {
@@ -22,29 +24,26 @@ export default function LoginView() {
     },
     onSuccess: () => {
       toast.success('Iniciando Sesion')
-      navigate('/')
+      navigate('/dashboard')
     }
   })
 
   const handleLogin = (formData) => mutate(formData)
 
   return (
-    <>
+    <section className="bg-white p-10 min-w-lg rounded-lg shadow-lg">
+      <h1 className="text-2xl font-semibold text-center">Inicio de Sesion </h1>
       <form
         onSubmit={handleSubmit(handleLogin)}
-        className="space-y-8 p-10 mt-10 bg-white"
+        className="container-form"
         noValidate
       >
-        <div className="flex flex-col gap-5">
-          <label
-            className="font-normal text-2xl"
-          >Email</label>
-
+        <div className="container-input">
+          <MdEmail />
           <input
             id="email"
             type="email"
-            placeholder="Email de Registro"
-            className="input-style"
+            placeholder="pescando@gmail.com"
             {...register("email", {
               required: "El Email es obligatorio",
               pattern: {
@@ -53,42 +52,44 @@ export default function LoginView() {
               },
             })}
           />
-          {errors.email && (
-            <ErrorMessage>{errors.email.message}</ErrorMessage>
-          )}
         </div>
 
-        <div className="flex flex-col gap-5">
-          <label
-            className="font-normal text-2xl"
-          >Password</label>
-
+        <div className="container-input">
+          <FaFingerprint />
           <input
             type="password"
-            placeholder="Password de Registro"
-            className="input-style"
+            placeholder="********"
             {...register("password", {
               required: "El Password es obligatorio",
             })}
           />
-          {errors.password && (
-            <ErrorMessage>{errors.password.message}</ErrorMessage>
-          )}
         </div>
 
         <button
           type="submit"
-          className="cursor-pointer"
         >Iniciar Sesión</button>
+
+        <div>
+          {errors.email && (
+            <ErrorMessage>{errors.email.message}</ErrorMessage>
+          )}
+          {errors.password && (
+            <ErrorMessage>{errors.password.message}</ErrorMessage>
+          )}
+        </div>
       </form>
 
-      <Link
-        to={'http://localhost:3000/api/auth/google'}
-        className="flex items-center justify-center w-full space-x-2 bg-gray-100 border border-gray-200 hover:bg-gray-200 px-4 py-2 rounded-md"
-      >
-        <FcGoogle />
-        <p className="font-bold text-sm text-gray-500">Google</p>
-      </Link>
-    </>
+      <div className="px-10 space-y-4">
+        <Link
+          to={'http://localhost:3000/api/auth/google'}
+          className="flex items-center justify-center w-full space-x-2 bg-gray-100 border border-gray-200 hover:bg-gray-200 px-4 py-2 rounded-md transition-colors duration-pro"
+        >
+          <FcGoogle />
+          <p className="font-bold text-sm text-gray-500">Google</p>
+        </Link>
+        <Link to={'/auth/register'} className="text-center block text-sm text-gray-500">Registrate</Link>
+      </div>
+
+    </section>
   )
 }

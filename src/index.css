@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
+@theme {
+    --transition-duration-pro: 0.25s;
+}
+
 * {
     font-family: "MuseoModerno", sans-serif;
     font-optical-sizing: auto;
@@ -8,6 +12,26 @@
 }
 
 /* Estilos de formularios */
-.input-style {
-    @apply border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
+.container-form {
+    @apply space-y-8 p-10 mt-4;
+
+    button {
+        @apply cursor-pointer w-full bg-blue-500 text-white p-2 rounded-md transition-colors duration-pro;
+
+        &:hover {
+            @apply bg-blue-600;
+        }
+    }
+}
+
+.container-input {
+    @apply flex items-center border border-gray-200 rounded-md gap-4 pl-2;
+
+    svg {
+        @apply text-gray-500 size-6;
+    }
+
+    input {
+        @apply w-full rounded-md p-2 focus:outline-none focus:bg-gray-100;
+    }
 }
