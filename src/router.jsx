@@ -24,9 +24,7 @@ export default function router() {
                     <Route path='request-code' element={<RequestNewCodeView />} />
                 </Route>
 
-                <Route element={<AuthLayout />}>
-                    <Route path='*' element={<NotFoundView />} />
-                </Route>
+                <Route path='*' element={<NotFoundView />} />
             </Routes>
             <ToastContainer
                 pauseOnHover={false}
