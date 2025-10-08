@@ -6,6 +6,8 @@ import NotFoundView from "./views/404/NotFoundView";
 import { ToastContainer } from "react-toastify";
 import LoginView from "./views/auth/LoginView";
 import RegisterView from "./views/auth/RegisterView";
+import ConfirmAccountView from "./views/auth/ConfirmAccountView";
+import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 
 export default function router() {
     return (
@@ -18,6 +20,8 @@ export default function router() {
                 <Route path="/auth" element={<AuthLayout />}>
                     <Route path="login" element={<LoginView />} index />
                     <Route path="register" element={<RegisterView />} />
+                    <Route path='confirm-account' element={<ConfirmAccountView />} />
+                    <Route path='request-code' element={<RequestNewCodeView />} />
                 </Route>
 
                 <Route element={<AuthLayout />}>
