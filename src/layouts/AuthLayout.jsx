@@ -10,7 +10,7 @@ export default function AuthLayout() {
     if (data) return <Navigate to='/' />
 
     return (
-        <main className='min-h-screen flex items-center justify-center p-4 bg-gray-200'>
+        <main className='min-h-screen flex items-center justify-center p-4 bg-radial-animated'>
             <Outlet />
         </main>
     )

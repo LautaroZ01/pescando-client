@@ -31,8 +31,8 @@ export default function LoginView() {
   const handleLogin = (formData) => mutate(formData)
 
   return (
-    <section className="bg-white p-10 min-w-lg rounded-lg shadow-lg">
-      <h1 className="text-2xl font-semibold text-center">Inicio de Sesion </h1>
+    <section className="bg-white/20 backdrop-blur-lg p-10 min-w-lg rounded-lg shadow-lg">
+      <h1 className="text-2xl font-extrabold text-center bg-linear-to-l from-[#F28542] via-[#F46F95] to-[#F28542] bg-clip-text text-transparent">Inicio de Sesion </h1>
       <form
         onSubmit={handleSubmit(handleLogin)}
         className="container-form"
