@@ -31,11 +31,10 @@ export default function LoginView() {
   const handleLogin = (formData) => mutate(formData)
 
   return (
-    <section className="bg-white/20 backdrop-blur-lg p-10 min-w-lg rounded-lg shadow-lg">
-      <h1 className="text-2xl font-extrabold text-center bg-linear-to-l from-[#F28542] via-[#F46F95] to-[#F28542] bg-clip-text text-transparent">Inicio de Sesion </h1>
+    <section className="container-form">
+      <h1 className="title-style">Inicio de Sesion </h1>
       <form
         onSubmit={handleSubmit(handleLogin)}
-        className="container-form"
         noValidate
       >
         <div className="container-input">
@@ -53,6 +52,9 @@ export default function LoginView() {
             })}
           />
         </div>
+        {errors.email && (
+          <ErrorMessage>{errors.email.message}</ErrorMessage>
+        )}
 
         <div className="container-input">
           <FaFingerprint />
@@ -64,30 +66,24 @@ export default function LoginView() {
             })}
           />
         </div>
+        {errors.password && (
+          <ErrorMessage>{errors.password.message}</ErrorMessage>
+        )}
 
         <button
           type="submit"
         >Iniciar Sesión</button>
-
-        <div>
-          {errors.email && (
-            <ErrorMessage>{errors.email.message}</ErrorMessage>
-          )}
-          {errors.password && (
-            <ErrorMessage>{errors.password.message}</ErrorMessage>
-          )}
-        </div>
       </form>
 
-      <div className="px-10 space-y-4">
+      <div className="px-10 space-y-6">
         <Link
           to={'http://localhost:3000/api/auth/google'}
-          className="flex items-center justify-center w-full space-x-2 bg-gray-100 border border-gray-200 hover:bg-gray-200 px-4 py-2 rounded-md transition-colors duration-pro"
+          className="flex items-center justify-center w-full space-x-2 backdrop-blur-lg px-4 py-2 rounded-md group"
         >
           <FcGoogle />
-          <p className="font-bold text-sm text-gray-500">Google</p>
+          <p className="font-bold text-sm text-secundary-400 group-hover:text-secundary-500 transition-colors duration-pro">Google</p>
         </Link>
-        <Link to={'/auth/register'} className="text-center block text-sm text-gray-500">Registrate</Link>
+        <Link to={'/auth/register'} className="btn-link">¿No tienes una cuenta? Crea una</Link>
       </div>
 
     </section>

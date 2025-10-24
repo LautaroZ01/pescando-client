@@ -26,6 +26,8 @@
     --color-secundary-800: hsl(16.22, 66.07%, 21.96%);
     --color-secundary-900: hsl(15.32, 77.05%, 11.96%);
     --color-secundary-950: hsl(13.55, 83.78%, 7.25%);
+
+    --color-bg-200: #EFD8D6;
 }
 
 * {
@@ -35,8 +37,18 @@
 }
 
 /* Estilos de formularios */
+
+
 .container-form {
-    @apply space-y-8 p-10 mt-4;
+    @apply bg-white/20 backdrop-blur-lg p-10 min-w-lg rounded-lg shadow-lg;
+
+    form {
+        @apply space-y-8 p-10 mt-4;
+    }
+
+    h1 {
+        @apply text-2xl ;
+    }
 
     button {
         @apply cursor-pointer w-full bg-secundary-300 text-secundary-800 p-2 rounded-md transition-colors duration-pro;
@@ -44,6 +56,10 @@
         &:hover {
             @apply bg-secundary-400;
         }
+    }
+
+    .btn-link {
+        @apply text-center block;
     }
 }
 
@@ -55,7 +71,7 @@
     }
 
     input {
-        @apply w-full rounded-md p-2 focus:outline-none focus:bg-transparent;
+        @apply w-full rounded-md p-2 focus:outline-none focus:bg-transparent active:bg-transparent;
     }
 }
 
@@ -77,4 +93,13 @@
     background: radial-gradient(circle at center, #D99EED, #FFD179, #EF853C, #ED7A33);
     background-size: 200% 200%;
     animation: gradient-move 10s ease infinite;
+}
+
+/* Estilos de elementos */
+.title-style {
+    @apply font-extrabold text-center bg-linear-to-l from-[#F28542] via-[#F46F95] to-[#F28542] bg-clip-text text-transparent;
+}
+
+.btn-link {
+    @apply text-sm text-gray-700 hover:text-gray-800 transition-colors duration-pro;
 }

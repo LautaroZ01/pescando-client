@@ -36,7 +36,7 @@ export default function Header() {
                 </Link>
                 {data ? (
                     <div className="flex gap-4">
-                        <p>{data.firstname}</p>
+                        <Link to='/dashboard'>{data.firstname}</Link>
                         <button onClick={handleSession} className='cursor-pointer'>Cerrar Sesión</button>
                     </div>
                 ) : (
