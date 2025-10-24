@@ -64,7 +64,7 @@
 }
 
 .container-input {
-    @apply flex items-center shadow-2xl rounded-md gap-4 pl-2;
+    @apply flex items-center shadow-2xl rounded-md gap-4 pl-2 bg-white/50;
 
     svg {
         @apply text-gray-700 size-6;
