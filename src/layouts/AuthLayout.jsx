@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
 import Loader from '../components/ui/Loader'
+import { useAuth } from '../hooks/useAuth'
 
 export default function AuthLayout() {
     const { data, isLoading } = useAuth()

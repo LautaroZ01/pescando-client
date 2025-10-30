@@ -1,9 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { logoutUser } from '../API/AuthAPI'
 import { toast } from 'react-toastify'
-
+import { useAuth } from '../hooks/useAuth'
 
 export default function Header() {
     const { data, isLoading } = useAuth()
