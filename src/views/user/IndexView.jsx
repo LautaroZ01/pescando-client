@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import Loader from "../../components/ui/Loader"
 import { useAuth } from "../../hooks/useAuth"
 
@@ -7,8 +8,9 @@ export default function IndexView() {
     if (isLoading) return <Loader />
 
     if (data) return (
-        <>
+        <div className="min-h-screen grid place-items-center content-center gap-4">
             <h1 className="text-2xl font-bold">Bienvenido {data.firstname}</h1>
-        </>
+            <Link to="/">Volver</Link>
+        </div>
     )
 }
