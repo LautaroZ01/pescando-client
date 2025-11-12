@@ -1,11 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import ErrorMessage from "../../components/ui/ErrorMessage";
 import { autheticateUser } from "../../API/AuthAPI";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { MdEmail } from "react-icons/md";
 import { FaFingerprint } from "react-icons/fa";
 

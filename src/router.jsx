@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router";
 import HeroView from "./views/home/HeroView";
 import HomeLayout from "./layouts/HomeLayout";
 import AuthLayout from "./layouts/AuthLayout";

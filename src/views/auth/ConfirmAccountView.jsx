@@ -3,7 +3,7 @@ import { confirmAccount } from "../../API/AuthAPI"
 import { useState } from "react"
 import { toast } from "react-toastify"
 import { PinInput, PinInputField } from "@chakra-ui/pin-input"
-import { Link } from "react-router-dom"
+import { Link } from "react-router"
 
 export default function ConfirmAccountView() {
     const [token, setToken] = useState('')

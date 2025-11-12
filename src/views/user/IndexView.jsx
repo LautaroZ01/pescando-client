@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router"
 import Loader from "../../components/ui/Loader"
 import { useAuth } from "../../hooks/useAuth"
 

@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createAccount } from '../../API/AuthAPI';
 import { toast } from 'react-toastify';
 import ErrorMessage from '../../components/ui/ErrorMessage';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { MdEmail } from 'react-icons/md';
 import { FaFingerprint, FaLock, FaUser } from 'react-icons/fa';
 
