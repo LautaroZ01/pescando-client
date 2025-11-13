@@ -10,6 +10,7 @@ import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 import DashboardLayout from "./layouts/DashboardLayout";
 import IndexView from "./views/user/IndexView";
+import ProtectedRoute from "./components/middleware/ProtectedRoute";
 
 export default function router() {
     return (
@@ -26,8 +27,10 @@ export default function router() {
                     <Route path='request-code' element={<RequestNewCodeView />} />
                 </Route>
 
-                <Route path="/dashboard" element={<DashboardLayout />}>
-                    <Route index element={<IndexView />} />
+                <Route element={<ProtectedRoute allowedRoles={['admin', 'user']} />}>
+                    <Route path="/dashboard" element={<DashboardLayout />}>
+                        <Route index element={<IndexView />} />
+                    </Route>
                 </Route>
 
                 <Route path='*' element={<NotFoundView />} />
