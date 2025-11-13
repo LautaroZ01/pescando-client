@@ -4,6 +4,8 @@ import { createAccount } from '../../API/AuthAPI';
 import { toast } from 'react-toastify';
 import ErrorMessage from '../../components/ui/ErrorMessage';
 import { Link } from 'react-router-dom';
+import { MdEmail } from 'react-icons/md';
+import { FaFingerprint, FaLock, FaUser } from 'react-icons/fa';
 
 export default function RegisterView() {
     const defaultValues = {
@@ -32,31 +34,45 @@ export default function RegisterView() {
     const handleRegister = (formData) => mutate(formData)
 
     return (
-        <section className="bg-white p-10 min-w-lg rounded-lg shadow-lg">
-            <h1 className="text-2xl font-semibold text-center">Crea tu cuenta</h1>
+        <section className="container-form">
+            <h1 className="title-style">Crea tu cuenta</h1>
 
-            <form onSubmit={handleSubmit(handleRegister)} noValidate className="container-form">
-                <div className="container-input">
-                    <input placeholder='Tu nombre' type="text" id="firstname" {...register('firstname', {
-                        required: 'El nombre es requerido',
-                        minLength: {
-                            value: 2,
-                            message: 'El nombre debe tener al menos 2 caracteres'
-                        }
-                    })} />
+            <form onSubmit={handleSubmit(handleRegister)} noValidate>
+                <div className="flex gap-4">
+                    <div>
+                        <div className="container-input">
+                            <FaUser />
+                            <input placeholder='Tu nombre' type="text" id="firstname" {...register('firstname', {
+                                required: 'El nombre es requerido',
+                                minLength: {
+                                    value: 2,
+                                    message: 'El nombre debe tener al menos 2 caracteres'
+                                }
+                            })} />
+                        </div>
+                        {errors.firstname && (
+                            <ErrorMessage>{errors.firstname.message}</ErrorMessage>
+                        )}
+                    </div>
+                    <div>
+                        <div className="container-input">
+                            <input placeholder='Tu apellido' type="text"
+                                id="lastname"
+                                {...register('lastname', {
+                                    required: 'El apellido es requerido',
+                                    minLength: {
+                                        value: 2,
+                                        message: 'El apellido debe tener al menos 2 caracteres'
+                                    }
+                                })} />
+                        </div>
+                        {errors.lastname && (
+                            <ErrorMessage>{errors.lastname.message}</ErrorMessage>
+                        )}
+                    </div>
                 </div>
                 <div className="container-input">
-                    <input placeholder='Tu apellido' type="text"
-                        id="lastname"
-                        {...register('lastname', {
-                            required: 'El apellido es requerido',
-                            minLength: {
-                                value: 2,
-                                message: 'El apellido debe tener al menos 2 caracteres'
-                            }
-                        })} />
-                </div>
-                <div className="container-input">
+                    <MdEmail />
                     <input placeholder='pescando@gmail.com' type="email" id="email" {...register('email', {
                         required: 'El email es requerido',
                         pattern: {
@@ -65,7 +81,11 @@ export default function RegisterView() {
                         }
                     })} />
                 </div>
+                {errors.email && (
+                    <ErrorMessage>{errors.email.message}</ErrorMessage>
+                )}
                 <div className="container-input">
+                    <FaFingerprint />
                     <input placeholder="Tu contraseña" type="password" id="password" {...register('password', {
                         required: 'El password es requerido',
                         minLength: {
@@ -74,34 +94,24 @@ export default function RegisterView() {
                         }
                     })} />
                 </div>
+                {errors.password && (
+                    <ErrorMessage>{errors.password.message}</ErrorMessage>
+                )}
                 <div className="container-input">
+                    <FaLock />
                     <input placeholder="Confirmar contraseña" type="password" id="password_confirmation" {...register('password_confirmation', {
                         required: 'La confirmación de password es requerida',
                         validate: value => value === password || 'Los Passwords no son iguales'
                     })} />
                 </div>
+                {errors.password_confirmation && (
+                    <ErrorMessage>{errors.password_confirmation.message}</ErrorMessage>
+                )}
                 <button type="submit">Registrarse</button>
-                <div>
-                    {errors.firstname && (
-                        <ErrorMessage>{errors.firstname.message}</ErrorMessage>
-                    )}
-                    {errors.lastname && (
-                        <ErrorMessage>{errors.lastname.message}</ErrorMessage>
-                    )}
-                    {errors.email && (
-                        <ErrorMessage>{errors.email.message}</ErrorMessage>
-                    )}
-                    {errors.password && (
-                        <ErrorMessage>{errors.password.message}</ErrorMessage>
-                    )}
-                    {errors.password_confirmation && (
-                        <ErrorMessage>{errors.password_confirmation.message}</ErrorMessage>
-                    )}
-                </div>
             </form>
 
             <div>
-                <Link to={'/auth/login'} className="text-center block text-sm text-gray-500">Ya tienes una cuenta? Inicia Sesión</Link>
+                <Link to={'/auth/login'} className="btn-link">¿Ya tienes una cuenta? Inicia Sesión</Link>
             </div>
         </section>
     )

@@ -25,22 +25,20 @@ export default function ConfirmAccountView() {
     const handleComplete = (token) => mutate({ token })
 
     return (
-        <>
-            <form
-                className="space-y-8 p-10 bg-white mt-10"
-            >
+        <section className="container-form">
+            <form>
                 <label
                     className="font-normal text-2xl text-center block"
                 >Código de 6 dígitos</label>
 
                 <div className="flex justify-center gap-5">
                     <PinInput otp value={token} onChange={handleChange} onComplete={handleComplete}>
-                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-300 placeholder-white" />
-                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-300 placeholder-white" />
-                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-300 placeholder-white" />
-                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-300 placeholder-white" />
-                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-300 placeholder-white" />
-                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-300 placeholder-white" />
+                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-700 placeholder-gray-700 outline-none" />
+                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-700 placeholder-gray-700 outline-none" />
+                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-700 placeholder-gray-700 outline-none" />
+                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-700 placeholder-gray-700 outline-none" />
+                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-700 placeholder-gray-700 outline-none" />
+                        <PinInputField className="size-10 p-3 rounded-lg border border-gray-700 placeholder-gray-700 outline-none" />
                     </PinInput>
                 </div>
             </form>
@@ -52,6 +50,6 @@ export default function ConfirmAccountView() {
                     Solicitar un nuevo Código
                 </Link>
             </nav>
-        </>
+        </section>
     )
 }

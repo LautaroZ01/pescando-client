@@ -1,9 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { logoutUser } from '../API/AuthAPI'
 import { toast } from 'react-toastify'
-
+import { useAuth } from '../hooks/useAuth'
 
 export default function Header() {
     const { data, isLoading } = useAuth()
@@ -36,7 +35,7 @@ export default function Header() {
                 </Link>
                 {data ? (
                     <div className="flex gap-4">
-                        <p>{data.firstname}</p>
+                        <Link to='/dashboard'>{data.firstname}</Link>
                         <button onClick={handleSession} className='cursor-pointer'>Cerrar Sesión</button>
                     </div>
                 ) : (
