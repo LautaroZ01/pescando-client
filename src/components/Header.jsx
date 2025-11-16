@@ -1,29 +1,8 @@
-import { Link, useNavigate } from 'react-router'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { logoutUser } from '../API/AuthAPI'
-import { toast } from 'react-toastify'
+import { Link } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
 
 export default function Header() {
-    const { data, isLoading } = useAuth()
-    const navigate = useNavigate()
-    const queryClient = useQueryClient()
-
-    const { mutate } = useMutation({
-        mutationFn: logoutUser,
-        onError: (error) => {
-            toast.error(error.message)
-        },
-        onSuccess: (data) => {
-            toast.success(data)
-            queryClient.removeQueries({ queryKey: ['user'] })
-            navigate('/')
-        }
-    })
-
-    const handleSession = () => {
-        mutate()
-    }
+    const { data, isLoading, logout } = useAuth()
 
     if (isLoading) return null
 
@@ -36,7 +15,7 @@ export default function Header() {
                 {data ? (
                     <div className="flex gap-4">
                         <Link to='/dashboard'>{data.firstname}</Link>
-                        <button onClick={handleSession} className='cursor-pointer'>Cerrar Sesión</button>
+                        <button onClick={logout} className='cursor-pointer'>Cerrar Sesión</button>
                     </div>
                 ) : (
                     <nav className="flex gap-4">
