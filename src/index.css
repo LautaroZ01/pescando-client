@@ -4,6 +4,8 @@
 @theme {
     --transition-duration-pro: 0.25s;
 
+
+
     --color-primary-100: hsl(39 100% 95%);
     --color-primary-200: hsl(39 100% 85%);
     --color-primary-300: hsl(40 100% 75%);
@@ -28,6 +30,7 @@
     --color-secundary-950: hsl(13.55, 83.78%, 7.25%);
 
     --color-bg-200: #EFD8D6;
+    --color-bg-orange: #ff8519;
 }
 
 * {
@@ -100,6 +103,15 @@
     @apply font-extrabold text-center bg-linear-to-l from-[#F28542] via-[#F46F95] to-[#F28542] bg-clip-text text-transparent;
 }
 
+.text-style {
+    @apply bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent;
+}
+
 .btn-link {
     @apply text-sm text-gray-700 hover:text-gray-800 transition-colors duration-pro;
+}
+
+/* Estilos de secciones */
+.container-section {
+    @apply container mx-auto lg:px-8;
 }

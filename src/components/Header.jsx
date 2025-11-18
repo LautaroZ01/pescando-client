@@ -4,11 +4,12 @@ import { useAuth } from '../hooks/useAuth'
 export default function Header() {
     const { data, isLoading, logout } = useAuth()
 
+
     if (isLoading) return null
 
     return (
         <header>
-            <div className="flex items-center justify-between max-w-7xl mx-auto p-4 ">
+            <div className={`flex items-center justify-between container mx-auto p-4 top-4 lg:px-8 z-50 ${location.pathname === '/' ? 'fixed inset-x-0' : 'sticky'} backdrop-blur-md bg-white/20 rounded-full`}>
                 <Link to="/">
                     🦈
                 </Link>

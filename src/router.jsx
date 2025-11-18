@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import HeroView from "./views/home/HeroView";
 import HomeLayout from "./layouts/HomeLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import NotFoundView from "./views/404/NotFoundView";
@@ -10,6 +9,7 @@ import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 import DashboardLayout from "./layouts/DashboardLayout";
 import IndexView from "./views/user/IndexView";
+import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 
 export default function router() {
@@ -17,7 +17,7 @@ export default function router() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<HomeLayout />}>
-                    <Route index element={<HeroView />} />
+                    <Route index element={<IndexHomeView />} />
                 </Route>
 
                 <Route path="/auth" element={<AuthLayout />}>
