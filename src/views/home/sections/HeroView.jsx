@@ -18,7 +18,7 @@ export default function HeroView() {
                         Con Pescando, diseña, rastrea y domina tus rutinas. Desde hábitos mensuales complejos
                         hasta tareas diarias simples, todo en un solo lugar.
                     </p>
-                    <Link to='/auth/register' className="z-10 px-8 py-4 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-pro">
+                    <Link to='/auth/register' className="z-10 px-8 py-4 btn-primary text-lg font-semibold hover:shadow-2xl">
                         Comienza tu transformación
                     </Link>
                 </div>

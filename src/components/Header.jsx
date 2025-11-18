@@ -21,7 +21,7 @@ export default function Header() {
                 ) : (
                     <nav className="flex gap-4">
                         <Link to="/auth/login" className='px-8 py-2 rounded-full hover:scale-105 transition duration-pro'>Iniciar Sesión</Link>
-                        <Link to="/auth/register" className='px-8 py-2 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full hover:scale-105 transition-transform duration-pro'>Registrarse</Link>
+                        <Link to="/auth/register" className='px-8 py-2 btn-primary'>Registrarse</Link>
                     </nav>
                 )}
             </div>

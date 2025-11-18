@@ -4,8 +4,6 @@
 @theme {
     --transition-duration-pro: 0.25s;
 
-
-
     --color-primary-100: hsl(39 100% 95%);
     --color-primary-200: hsl(39 100% 85%);
     --color-primary-300: hsl(40 100% 75%);
@@ -39,8 +37,25 @@
     font-style: normal;
 }
 
-/* Estilos de formularios */
 
+/* Estilos de elementos */
+.title-style {
+    @apply font-extrabold text-center bg-linear-to-l from-[#F28542] via-[#F46F95] to-[#F28542] bg-clip-text text-transparent;
+}
+
+.text-style {
+    @apply bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent;
+}
+
+.btn-link {
+    @apply text-sm text-gray-700 hover:text-gray-800 transition-colors duration-pro;
+}
+
+.btn-primary {
+    @apply bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full hover:scale-105 transition-transform duration-pro;
+}
+
+/* Estilos de formularios */
 
 .container-form {
     @apply bg-white/20 backdrop-blur-lg p-10 min-w-lg rounded-lg shadow-lg;
@@ -50,15 +65,12 @@
     }
 
     h1 {
-        @apply text-2xl ;
+        @apply text-2xl;
     }
 
     button {
-        @apply cursor-pointer w-full bg-secundary-300 text-secundary-800 p-2 rounded-md transition-colors duration-pro;
+        @apply cursor-pointer w-full px-8 py-2 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full hover:scale-105 transition-transform duration-pro;
 
-        &:hover {
-            @apply bg-secundary-400;
-        }
     }
 
     .btn-link {
@@ -96,19 +108,6 @@
     background: radial-gradient(circle at center, #D99EED, #FFD179, #EF853C, #ED7A33);
     background-size: 200% 200%;
     animation: gradient-move 10s ease infinite;
-}
-
-/* Estilos de elementos */
-.title-style {
-    @apply font-extrabold text-center bg-linear-to-l from-[#F28542] via-[#F46F95] to-[#F28542] bg-clip-text text-transparent;
-}
-
-.text-style {
-    @apply bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent;
-}
-
-.btn-link {
-    @apply text-sm text-gray-700 hover:text-gray-800 transition-colors duration-pro;
 }
 
 /* Estilos de secciones */
