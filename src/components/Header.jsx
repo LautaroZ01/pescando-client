@@ -8,7 +8,7 @@ export default function Header() {
     if (isLoading) return null
 
     return (
-        <header>
+        <header className='px-10'>
             <div className={`flex items-center justify-between container mx-auto p-4 top-4 lg:px-8 z-50 ${location.pathname === '/' ? 'fixed inset-x-0' : 'sticky'} backdrop-blur-md bg-white/20 rounded-full`}>
                 <Link to="/">
                     🦈

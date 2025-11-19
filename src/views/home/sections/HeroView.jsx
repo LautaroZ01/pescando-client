@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 export default function HeroView() {
     return (
-        <section className="relative px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-100 to-bg-orange to-50% overflow-hidden min-h-screen grid">
+        <section className="relative px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-pink-100 to-bg-orange to-50% overflow-hidden min-h-screen grid">
             <div className="flex gap-4 container-section items-center justify-center relative">
                 <div className="absolute -top-10 -right-10 w-40 h-40 bg-orange-400 rounded-full opacity-50 blur-3xl"></div>
                 <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-pink-400 rounded-full opacity-50 blur-3xl"></div>
