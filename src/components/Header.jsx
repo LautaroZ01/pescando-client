@@ -11,7 +11,7 @@ export default function Header() {
         <header className='px-10'>
             <div className={`flex items-center justify-between container mx-auto p-4 top-4 lg:px-8 z-50 ${location.pathname === '/' ? 'fixed inset-x-0' : 'sticky'} backdrop-blur-md bg-white/20 rounded-full`}>
                 <Link to="/">
-                    🦈
+                    🎣
                 </Link>
                 {data ? (
                     <div className="flex gap-4">
@@ -19,7 +19,7 @@ export default function Header() {
                         <button onClick={logout} className='cursor-pointer'>Cerrar Sesión</button>
                     </div>
                 ) : (
-                    <nav className="flex gap-4">
+                    <nav className="flex">
                         <Link to="/auth/login" className='px-8 py-2 rounded-full hover:scale-105 transition duration-pro'>Iniciar Sesión</Link>
                         <Link to="/auth/register" className='px-8 py-2 btn-primary'>Registrarse</Link>
                     </nav>

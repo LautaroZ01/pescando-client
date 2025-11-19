@@ -10,7 +10,7 @@ export default function CTAView() {
                 <p className="text-xl mb-20 opacity-90">
                     Únete a Pescando gratis. Los primeros 3 hábitos son por nuestra cuenta.
                 </p>
-                <Link to='/auth/register' className="px-10 py-4 bg-white text-orange-500 rounded-full text-lg font-bold hover:shadow-2xl hover:scale-105 transition-transform duration-pro">
+                <Link to='/auth/register' className="px-10 py-4 bg-white text-orange-500 rounded-full text-lg font-bold hover:bg-white/90 transition-all duration-pro">
                     Registrarse Gratis
                 </Link>
             </div>
