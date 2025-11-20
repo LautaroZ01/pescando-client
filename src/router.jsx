@@ -10,6 +10,7 @@ import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 import DashboardLayout from "./layouts/DashboardLayout";
 import IndexView from "./views/user/IndexView";
+import ProfileView from "./views/profile/ProfileView";
 
 export default function router() {
     return (
@@ -17,6 +18,8 @@ export default function router() {
             <Routes>
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<HeroView />} />
+                    <Route path="/profile" element={<ProfileView />} />
+
                 </Route>
 
                 <Route path="/auth" element={<AuthLayout />}>
