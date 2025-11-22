@@ -110,8 +110,9 @@ export default function RegisterView() {
                 <button type="submit">Registrarse</button>
             </form>
 
-            <div>
+            <div className='space-y-4'>
                 <Link to={'/auth/login'} className="btn-link">¿Ya tienes una cuenta? Inicia Sesión</Link>
+                <Link to={'/'} className="btn-link">Volver al inicio</Link>
             </div>
         </section>
     )
