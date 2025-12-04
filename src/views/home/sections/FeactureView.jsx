@@ -48,7 +48,7 @@ export default function FeactureView() {
 
                         <Link className="btn-primary px-6 py-2.5 rounded-full text-sm font-medium flex items-center gap-2 mt-12 hover:shadow-lg transition-all duration-pro">
                             Crear cuenta gratis
-                            <FaArrowRight />
+                            <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
                         </Link>
                     </div>
                 </article>
