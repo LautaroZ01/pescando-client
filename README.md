@@ -171,3 +171,36 @@ npm run dev
 ```
 
 ¡Y eso es todo! 🚀
+
+## Actualizar el repositorio local
+
+Si ya tienes el repositorio clonado y necesitas obtener los últimos cambios:
+
+1. **Ingresar a la carpeta Client**:
+   ```sh
+   cd Client
+   ```
+
+2. **Obtener las referencias remotas**:
+   ```sh
+   git fetch
+   ```
+
+3. **Cambiar a la rama development**:
+   ```sh
+   git switch development
+   ```
+
+4. **Actualizar con los últimos cambios**:
+   ```sh
+   git pull
+   ```
+
+5. **Configurar las variables de entorno**:
+   - Asegúrate de tener el archivo `.env.local` con las variables correctas.
+
+6. **Inicializar el servidor y verificar**:
+   ```sh
+   npm run dev
+   ```
+   - Verifica que el servidor inicie correctamente y responda en `http://localhost:5173` (o el puerto configurado).
