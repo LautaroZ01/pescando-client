@@ -74,3 +74,14 @@ export async function logoutUser() {
         throw new Error('Error al cerrar sesión');
     }
 }
+
+export async function getCurrentUser() {
+    try {
+        const { data } = await api.get('/auth/me');
+        return data;
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error);
+        }
+    }
+}
