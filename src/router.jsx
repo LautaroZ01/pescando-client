@@ -11,6 +11,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import IndexView from "./views/user/IndexView";
 import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
+import Dashboard from "./views/habits/Dashboard";
 
 export default function router() {
     return (
@@ -29,7 +30,7 @@ export default function router() {
 
                 <Route element={<ProtectedRoute allowedRoles={['admin', 'user']} />}>
                     <Route path="/dashboard" element={<DashboardLayout />}>
-                        <Route index element={<IndexView />} />
+                        <Route index element={<Dashboard />} />
                     </Route>
                 </Route>
 

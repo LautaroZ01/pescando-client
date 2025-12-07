@@ -112,21 +112,7 @@ export default function HabitsView() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50">
-            {/* Sidebar */}
-            <div className="fixed left-0 top-0 h-full w-20 bg-gradient-to-b from-orange-200 via-rose-200 to-red-200 shadow-lg flex flex-col items-center py-8 gap-6">
-                <div className="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-110 transition">
-                    <span className="text-2xl">❤️</span>
-                </div>
-                <div className="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-110 transition">
-                    <span className="text-2xl">🏆</span>
-                </div>
-                <div className="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-110 transition">
-                    <span className="text-2xl">📊</span>
-                </div>
-                <div className="mt-auto w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-110 transition">
-                    <span className="text-2xl">👤</span>
-                </div>
-            </div>
+
 
             {/* Main Content */}
             <div className="ml-20 p-8">
