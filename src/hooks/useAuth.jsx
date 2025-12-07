@@ -1,12 +1,35 @@
-import { useQuery } from "@tanstack/react-query";
-import { getUser } from "../API/AuthAPI";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUser, logoutUser } from "../API/AuthAPI";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 export const useAuth = () => {
-    const {data, isError, isLoading} = useQuery({
+    const navigate = useNavigate()
+
+    const { data, isError, isLoading } = useQuery({
         queryKey: ['user'],
         queryFn: getUser,
-        retry: 0
+        retry: 0,
+        staleTime: Infinity,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false
     })
 
-    return {data, isError, isLoading}
+    const queryClient = useQueryClient()
+
+    const { mutate } = useMutation({
+        mutationFn: logoutUser,
+        onError: (error) => {
+            toast.error(error.message)
+        },
+        onSuccess: (data) => {
+            toast.success(data)
+            queryClient.removeQueries({ queryKey: ['user'] })
+            navigate('/')
+        }
+    })
+
+    const logout = () => mutate()
+
+    return { data, isError, isLoading, logout }
 }

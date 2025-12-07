@@ -84,6 +84,7 @@ export default function LoginView() {
           <p className="font-bold text-sm text-secundary-400 group-hover:text-secundary-500 transition-colors duration-pro">Google</p>
         </Link>
         <Link to={'/auth/register'} className="btn-link">¿No tienes una cuenta? Crea una</Link>
+        <Link to={'/'} className="btn-link">Volver al inicio</Link>
       </div>
 
     </section>
