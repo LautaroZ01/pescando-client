@@ -1,5 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
-html {
-  color-scheme: dark light;
+@theme {
+    --transition-duration-pro: 0.25s;
+
+    --color-primary-100: hsl(39 100% 95%);
+    --color-primary-200: hsl(39 100% 85%);
+    --color-primary-300: hsl(40 100% 75%);
+    --color-primary-400: hsl(40 100% 65%);
+    --color-primary-500: hsl(39 90% 55%);
+    --color-primary-600: hsl(38 80% 45%);
+    --color-primary-700: hsl(38 70% 38%);
+    --color-primary-800: hsl(38 60% 32%);
+    --color-primary-900: hsl(38 55% 24%);
+    --color-primary-950: hsl(39 60% 15%);
+
+    --color-secundary-50: hsl(7.06, 73.91%, 95.49%);
+    --color-secundary-100: hsl(8.78, 77.36%, 89.61%);
+    --color-secundary-200: hsl(10.24, 82%, 80.39%);
+    --color-secundary-300: hsl(12, 83.89%, 70.78%);
+    --color-secundary-400: hsl(15, 86.6%, 61.96%);
+    --color-secundary-500: hsl(16.15, 63.93%, 52.16%);
+    --color-secundary-600: hsl(16.15, 60.19%, 42.35%);
+    --color-secundary-700: hsl(15.88, 62.2%, 32.16%);
+    --color-secundary-800: hsl(16.22, 66.07%, 21.96%);
+    --color-secundary-900: hsl(15.32, 77.05%, 11.96%);
+    --color-secundary-950: hsl(13.55, 83.78%, 7.25%);
+
+    --color-bg-200: #EFD8D6;
+    --color-bg-orange: #ff8519;
+}
+
+* {
+    font-family: "MuseoModerno", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+::selection {
+    background-color: #ff6900;
+    color: #ffffff;
+}
+
+/* Estilos de elementos */
+.title-style {
+    @apply font-extrabold text-center bg-linear-to-l from-[#F28542] via-[#F46F95] to-[#F28542] bg-clip-text text-transparent;
+}
+
+.text-style {
+    @apply bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent;
+}
+
+.btn-link {
+    @apply text-sm text-gray-700 hover:text-gray-800 transition-colors duration-pro;
+}
+
+.btn-primary {
+    @apply bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full hover:scale-105 transition-transform duration-pro;
+}
+
+/* Estilos de formularios */
+
+.container-form {
+    @apply bg-white/20 backdrop-blur-lg p-10 min-w-lg rounded-lg shadow-lg;
+
+    form {
+        @apply space-y-8 p-10 mt-4;
+    }
+
+    h1 {
+        @apply text-2xl;
+    }
+
+    button {
+        @apply cursor-pointer w-full px-8 py-2 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full hover:scale-105 transition-transform duration-pro;
+
+    }
+
+    .btn-link {
+        @apply text-center block;
+    }
+}
+
+.container-input {
+    @apply flex items-center shadow-2xl rounded-md gap-4 pl-2 bg-white/50;
+
+    svg {
+        @apply text-gray-700 size-6;
+    }
+
+    input {
+        @apply w-full rounded-md p-2 focus:outline-none focus:bg-transparent active:bg-transparent;
+    }
+}
+
+@keyframes gradient-move {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.bg-radial-animated {
+    background: radial-gradient(circle at center, #D99EED, #FFD179, #EF853C, #ED7A33);
+    background-size: 200% 200%;
+    animation: gradient-move 10s ease infinite;
+}
+
+/* Estilos de secciones */
+.container-section {
+    @apply container mx-auto lg:px-8;
 }
