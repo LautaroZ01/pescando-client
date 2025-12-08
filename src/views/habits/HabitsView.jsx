@@ -1,7 +1,14 @@
 // src/views/habits/HabitsView.jsx
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getHabits, createHabit, toggleTask, deleteTask } from '../../API/HabitAPI';
+import {
+    getHabits,
+    createHabit,
+    toggleTask,
+    deleteTask,
+    updateHabit,
+    deleteHabit,
+} from '../../API/HabitAPI';
 
 export default function HabitsView() {
     const location = useLocation();
@@ -9,6 +16,7 @@ export default function HabitsView() {
     const [loading, setLoading] = useState(true);
     const [habits, setHabits] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [editingHabit, setEditingHabit] = useState(null); // null = creando, objeto = editando
     const [newHabit, setNewHabit] = useState({
         nombre: '',
         categoria: '',
@@ -52,6 +60,7 @@ export default function HabitsView() {
             alert('Error al actualizar la tarea');
         }
     };
+
 
     const handleDeleteTarea = async (habitId, tareaId) => {
         if (!confirm('¿Estás seguro de eliminar esta tarea?')) return;
@@ -97,6 +106,29 @@ export default function HabitsView() {
             categoria: '',
             tareas: [''],
         });
+        setEditingHabit(null);
+    };
+
+    const handleOpenEditHabit = (habit) => {
+        setEditingHabit(habit);
+        setNewHabit({
+            nombre: habit.nombre,
+            categoria: habit.categoria,
+            tareas: habit.tareas.map((t) => t.titulo),
+        });
+        setShowModal(true);
+    };
+
+    const handleDeleteHabit = async (habitId) => {
+        if (!confirm('¿Estás seguro de eliminar este hábito completo?')) return;
+
+        try {
+            await deleteHabit(habitId);
+            setHabits((prev) => prev.filter((h) => h._id !== habitId));
+        } catch (error) {
+            console.error('Error al eliminar hábito:', error);
+            alert('Error al eliminar el hábito');
+        }
     };
 
     const handleAgregarHabito = async (e) => {
@@ -118,22 +150,33 @@ export default function HabitsView() {
         try {
             setSubmitting(true);
 
-            await createHabit({
-                nombre: newHabit.nombre,
-                categoria: newHabit.categoria,
-                tareas: tareasLimpias,
-            });
+            if (editingHabit) {
+                // 
+                await updateHabit(editingHabit._id, {
+                    nombre: newHabit.nombre,
+                    categoria: newHabit.categoria,
+                    tareas: tareasLimpias,
+                });
+            } else {
+                // CREAR
+                await createHabit({
+                    nombre: newHabit.nombre,
+                    categoria: newHabit.categoria,
+                    tareas: tareasLimpias,
+                });
+            }
 
             await loadHabits();
             resetForm();
             setShowModal(false);
         } catch (error) {
-            console.error('Error al crear hábito:', error);
-            alert('Error al crear el hábito');
+            console.error('Error al guardar hábito:', error);
+            alert('Error al guardar el hábito');
         } finally {
             setSubmitting(false);
         }
     };
+
 
     if (loading) {
         return (
@@ -150,10 +193,15 @@ export default function HabitsView() {
                 <div className="flex justify-between items-center mb-8">
                     <div>
                         <h1 className="text-4xl font-bold text-gray-800 mb-2">Mis Hábitos</h1>
-                        <p className="text-gray-600">Gestiona y da seguimiento a todos tus hábitos</p>
+                        <p className="text-gray-600">
+                            Gestiona y da seguimiento a todos tus hábitos
+                        </p>
                     </div>
                     <button
-                        onClick={() => setShowModal(true)}
+                        onClick={() => {
+                            resetForm();
+                            setShowModal(true);
+                        }}
                         className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-6 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105 flex items-center gap-2"
                     >
                         <span className="text-xl">+</span>
@@ -171,7 +219,10 @@ export default function HabitsView() {
                             Crea tu primer hábito para comenzar tu viaje de crecimiento
                         </p>
                         <button
-                            onClick={() => setShowModal(true)}
+                            onClick={() => {
+                                resetForm();
+                                setShowModal(true);
+                            }}
                             className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-8 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105"
                         >
                             Crear mi primer hábito
@@ -180,7 +231,9 @@ export default function HabitsView() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         {habits.map((habit) => {
-                            const completadas = habit.tareas.filter((t) => t.completado).length;
+                            const completadas = habit.tareas.filter(
+                                (t) => t.completado
+                            ).length;
                             const total = habit.tareas.length || 1;
                             const progreso = Math.round((completadas / total) * 100);
 
@@ -194,7 +247,9 @@ export default function HabitsView() {
                                             <h3 className="text-2xl font-bold text-gray-800">
                                                 {habit.nombre}
                                             </h3>
-                                            <p className="text-sm text-gray-500 mt-1">{habit.categoria}</p>
+                                            <p className="text-sm text-gray-500 mt-1">
+                                                {habit.categoria}
+                                            </p>
                                         </div>
                                         <span className="text-sm bg-orange-100 text-orange-700 px-3 py-1 rounded-full">
                                             {completadas}/{habit.tareas.length}
@@ -217,22 +272,29 @@ export default function HabitsView() {
                                                 <div
                                                     className="flex items-center gap-3 flex-1 cursor-pointer"
                                                     onClick={() =>
-                                                        handleToggleTarea(habit._id, tarea._id)
+                                                        handleToggleTarea(
+                                                            habit._id,
+                                                            tarea._id
+                                                        )
                                                     }
                                                 >
                                                     <div
-                                                        className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${tarea.completado ? 'bg-green-500' : 'bg-gray-300'
+                                                        className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${tarea.completado
+                                                            ? 'bg-green-500'
+                                                            : 'bg-gray-300'
                                                             }`}
                                                     >
                                                         {tarea.completado && (
-                                                            <span className="text-white text-sm">✓</span>
+                                                            <span className="text-white text-sm">
+                                                                ✓
+                                                            </span>
                                                         )}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <p
                                                             className={`text-gray-800 truncate ${tarea.completado
-                                                                    ? 'line-through opacity-60'
-                                                                    : ''
+                                                                ? 'line-through opacity-60'
+                                                                : ''
                                                                 }`}
                                                         >
                                                             {tarea.titulo}
@@ -246,7 +308,10 @@ export default function HabitsView() {
                                                 </div>
                                                 <button
                                                     onClick={() =>
-                                                        handleDeleteTarea(habit._id, tarea._id)
+                                                        handleDeleteTarea(
+                                                            habit._id,
+                                                            tarea._id
+                                                        )
                                                     }
                                                     className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity p-2"
                                                     title="Eliminar tarea"
@@ -255,6 +320,25 @@ export default function HabitsView() {
                                                 </button>
                                             </div>
                                         ))}
+                                    </div>
+
+                                    {/* BOTONES DE EDITAR / ELIMINAR HÁBITO */}
+                                    <div className="mt-4 flex justify-end gap-3">
+                                        <button
+                                            onClick={() => handleOpenEditHabit(habit)}
+                                            className="px-4 py-2 rounded-full text-sm font-medium bg-orange-50 text-orange-600 hover:bg-orange-100 transition"
+                                        >
+                                            Editar hábito
+                                        </button>
+
+                                        <button
+                                            onClick={() =>
+                                                handleDeleteHabit(habit._id)
+                                            }
+                                            className="px-4 py-2 rounded-full text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition"
+                                        >
+                                            Eliminar hábito
+                                        </button>
                                     </div>
                                 </div>
                             );
@@ -267,9 +351,10 @@ export default function HabitsView() {
             {showModal && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
                     <div className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4">
-                        <h2 className="text-3xl font-bold text-gray-800 mb-6">
-                            Nuevo hábito
+                        <h2 className="text-2xl font-bold mb-4">
+                            {editingHabit ? 'Editar hábito' : 'Nuevo hábito'}
                         </h2>
+
                         <form onSubmit={handleAgregarHabito}>
                             {/* Nombre del hábito */}
                             <div className="mb-4">
@@ -280,15 +365,18 @@ export default function HabitsView() {
                                     type="text"
                                     value={newHabit.nombre}
                                     onChange={(e) =>
-                                        setNewHabit({ ...newHabit, nombre: e.target.value })
+                                        setNewHabit({
+                                            ...newHabit,
+                                            nombre: e.target.value,
+                                        })
                                     }
-                                    placeholder="Ej: Programador Web"
+                                    placeholder="Ej: Programación Web"
                                     className="w-full px-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-orange-400 focus:outline-none"
                                     disabled={submitting}
                                 />
                             </div>
 
-                            {/* Categoría (provisorio) */}
+                            {/* Categoría */}
                             <div className="mb-4">
                                 <label className="block text-gray-700 font-medium mb-2">
                                     Categoría
@@ -296,7 +384,10 @@ export default function HabitsView() {
                                 <select
                                     value={newHabit.categoria}
                                     onChange={(e) =>
-                                        setNewHabit({ ...newHabit, categoria: e.target.value })
+                                        setNewHabit({
+                                            ...newHabit,
+                                            categoria: e.target.value,
+                                        })
                                     }
                                     className="w-full px-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-orange-400 focus:outline-none"
                                     disabled={submitting}
@@ -321,11 +412,14 @@ export default function HabitsView() {
                                                 type="text"
                                                 value={tarea}
                                                 onChange={(e) =>
-                                                    handleTaskChange(index, e.target.value)
+                                                    handleTaskChange(
+                                                        index,
+                                                        e.target.value
+                                                    )
                                                 }
                                                 placeholder={
                                                     index === 0
-                                                        ? 'Ej: Leer sobre Node.js'
+                                                        ? 'Ej: Practicar React'
                                                         : 'Otra tarea...'
                                                 }
                                                 className="flex-1 px-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-orange-400 focus:outline-none"
@@ -334,7 +428,9 @@ export default function HabitsView() {
                                             {newHabit.tareas.length > 1 && (
                                                 <button
                                                     type="button"
-                                                    onClick={() => handleRemoveTaskField(index)}
+                                                    onClick={() =>
+                                                        handleRemoveTaskField(index)
+                                                    }
                                                     className="px-3 py-2 rounded-xl bg-red-100 text-red-600 hover:bg-red-200 text-sm"
                                                     disabled={submitting}
                                                     title="Eliminar campo"
@@ -360,19 +456,24 @@ export default function HabitsView() {
                                     type="button"
                                     onClick={() => {
                                         setShowModal(false);
-                                        resetForm();
+                                        resetForm(); // esto ya pone editingHabit en null
                                     }}
                                     className="flex-1 px-6 py-3 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium transition"
                                     disabled={submitting}
                                 >
                                     Cancelar
                                 </button>
+
                                 <button
                                     type="submit"
-                                    className="flex-1 px-6 py-3 rounded-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white font-medium shadow-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled={submitting}
+                                    className="flex-1 px-6 py-3 rounded-full bg-gradient-to-r from-orange-400 to-red-400 text-white font-medium shadow-md hover:from-orange-500 hover:to-red-500 transition"
                                 >
-                                    {submitting ? 'Guardando...' : 'Crear'}
+                                    {submitting
+                                        ? 'Guardando...'
+                                        : editingHabit
+                                            ? 'Guardar cambios'
+                                            : 'Crear hábito'}
                                 </button>
                             </div>
                         </form>
