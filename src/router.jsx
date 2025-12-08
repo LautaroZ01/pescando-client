@@ -8,14 +8,15 @@ import RegisterView from "./views/auth/RegisterView";
 import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 import DashboardLayout from "./layouts/DashboardLayout";
+import IndexView from "./views/user/IndexView";
 import ProfileView from "./views/profile/ProfileView";
 import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
-import CategoryView from "./views/category/categoryView";
 import CommunityView from "./views/community/CommunityViews";
 import Dashboard from "./views/habits/Dashboard";
-import HabitsView from "./views/habits/HabitsView";
-import IndexView from "./views/home/IndexView";
+import HabitsView from "./views/habits/HabitsView"; //
+import HeroView from "./views/home/sections/HeroView";
+import CategoryView from "./views/category/categoryView";
 
 export default function Router() {
     return (
@@ -23,14 +24,14 @@ export default function Router() {
             <Routes>
                 {/* Landing pública */}
                 <Route path="/" element={<HomeLayout />}>
-                    <Route index element={<IndexView />} />
+                    <Route index element={<HeroView />} />
                     <Route path="/profile" element={<ProfileView />} />
 
                     <Route index element={<IndexHomeView />} />
-                    <Route path="/community" element={<CommunityView />} />
                 </Route>
 
                 {/* COMUNIDAD PÚBLICA - Sin layout, accesible para todos */}
+                <Route path="/community" element={<CommunityView />} />
 
                 {/* Auth */}
                 <Route path="/auth" element={<AuthLayout />}>
@@ -40,15 +41,12 @@ export default function Router() {
                     <Route path="request-code" element={<RequestNewCodeView />} />
                 </Route>
 
-                <Route element={<ProtectedRoute allowedRoles={['admin', 'user']} />}>
-                    <Route path="/dashboard" element={<DashboardLayout />}>
-                        <Route index element={<IndexView />} />
-                        <Route path="category" element={<CategoryView/>} />
                 {/* Área protegida */}
                 <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
                     <Route element={<DashboardLayout />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/habits" element={<HabitsView />} />
+                        <Route path="/category" element={<CategoryView />} />
                     </Route>
                 </Route>
 
