@@ -12,6 +12,7 @@ import IndexView from "./views/user/IndexView";
 import ProfileView from "./views/profile/ProfileView";
 import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
+import CommunityView from "./views/community/CommunityViews";
 import Dashboard from "./views/habits/Dashboard";
 import HabitsView from "./views/habits/HabitsView"; //
 import HeroView from "./views/home/sections/HeroView";
@@ -28,9 +29,12 @@ export default function Router() {
                     <Route index element={<IndexHomeView />} />
                 </Route>
 
+                {/* COMUNIDAD PÚBLICA - Sin layout, accesible para todos */}
+                <Route path="/community" element={<CommunityView />} />
+
                 {/* Auth */}
                 <Route path="/auth" element={<AuthLayout />}>
-                    <Route index path="login" element={<LoginView />} />
+                    <Route path="login" element={<LoginView />} />
                     <Route path="register" element={<RegisterView />} />
                     <Route path="confirm-account" element={<ConfirmAccountView />} />
                     <Route path="request-code" element={<RequestNewCodeView />} />
@@ -52,4 +56,3 @@ export default function Router() {
         </BrowserRouter>
     );
 }
-
