@@ -14,6 +14,7 @@ import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import Dashboard from "./views/habits/Dashboard";
 import HabitsView from "./views/habits/HabitsView"; //
+import HeroView from "./views/home/sections/HeroView";
 
 export default function Router() {
     return (
