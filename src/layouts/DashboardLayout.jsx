@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router"
 import Loader from "../components/ui/Loader"
 import { useAuth } from "../hooks/useAuth"
+import SideBar from "../components/ui/SideBar"
 
 export default function DashboardLayout() {
     const { data, isLoading } = useAuth()
@@ -10,8 +11,13 @@ export default function DashboardLayout() {
     if (!data) return <Navigate to='/' />
 
     return (
-        <>
-            <Outlet />
-        </>
+        <div className="flex h-screen">
+            <div className="h-full p-4">
+                <SideBar />
+            </div>
+            <div className="grow h-full overflow-y-auto">
+                <Outlet />
+            </div>
+        </div>
     )
 }
