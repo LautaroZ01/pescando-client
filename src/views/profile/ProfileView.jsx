@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { changeProfilePhoto, getProfile, updateProfile, uploadImageToCloudinary } from '../../API/UserAPI';
-//import { Bell, Camera, User } from 'lucide-react';
 import { FaCamera, FaRegUser } from "react-icons/fa";
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -103,13 +102,6 @@ export default function ProfileView() {
                 <div className='bg-gradient-to-r from-orange-200 to-pink-200 rounded-3xl p-8 mb-6 shadow-lg'>
                     <div className='flex items-center justify-between mb-6'>
                         <h1 className='text-3xl font-bold text-orange-600'>Mi perfil</h1>
-                        {/*
-                        <button
-                            onClick={() => setNotifications(!notifications)}
-                            className={`p-3 rounded-full transition-all ${notifications ? 'bg-orange-400 text-white' : 'bg-white text-gray-400'}`}>
-                            <Bell size={24} />
-                        </button>
-                        */}
                     </div>
 
                     {/* Foto de perfil */}
@@ -193,23 +185,6 @@ export default function ProfileView() {
                                {...register('email')}
                                 className='w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-gray-100 text-gray-600 focus:border-gray-400 outline-none transition-all' />
                         </div>
-                        
-                        {/*
-                        <div className='flex items-center justify-between p-4 bg-orange-200 rounded-xl'>
-   
-                            <div className='flex items-center gap-3'>
-                                <Bell size={24} className='text-orange-400 mb-2' />
-                                <span className='font-semibold text-gray-700'>Notificaciones</span>
-                            </div>
-                         
-                            <button
-                                onClick={() => setNotifications(!notifications)}
-                                className={`w-14 h-8 rounded-full transition-all ${ notifications ? 'bg-orange-400' : 'bg-gray-300'}`}>
-                                    <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-all transform ${ notifications ? 'translate-x-7' : 'translate-x-1'}`} />
-                            </button>
-                         
-                        </div>
-                        */}
                         
                         <button type='submit' className='w-full bg-gradient-to-r from-orange-400 to-pink-400 text-white font-bold py-3 rounded-xl hover:shadow-xl transition-all cursor-pointer'>Guardar Cambios</button>
                     </form>
