@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import ErrorMessage from '../../components/ui/ErrorMessage';
+import ProfileIcon from '../../components/ui/ProfileIcon';
 
 
 export default function ProfileView() {
@@ -90,11 +91,7 @@ export default function ProfileView() {
         );
     }
 
-
-
     // --- Subtarea 4: Mostrar Foto o Avatar ---
-    // (Añade una imagen de avatar por defecto en tu carpeta `public`)
-    const defaultAvatar = '/default-avatar.png';
     const userPhoto = userData?.photo
 
     const fullName = `${watchFirstname || userData.firstname || ''} ${watchLastname || userData.lastname || ''}`.trim()
@@ -118,13 +115,10 @@ export default function ProfileView() {
                     {/* Foto de perfil */}
                     <div className='flex flex-col items-center mb-6'>
                         <div className='relative'>
-                            <div className='w-32 h-32 rounded-full bg-gradient-to-br from-orange-300 to-pink-300 flex items-center justify-center overflow-hidden shadow-xl'>
-                                {userPhoto ? (
-                                    <img src={userData.photo} alt="Perfil" className='w-full h-full object-cover' />
-                                ) : (
-                                    <FaRegUser className="w-20 h-20 text-white"/>
-                                )}
-                            </div>
+                            <ProfileIcon
+                                src = {userData?.photo}
+                                alt = 'Foto de perfil'
+                            />
                             <label className='absolute bottom-0 right-0 bg-orange-400 p-2 rounded-full cursor-pointer shadow-lg hover:bg-orange-500 transition-all' >
                                 <FaCamera size={20} className='text-white'/>
                                 <input 
