@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getProfile, updateProfile } from '../../API/UserAPI';
+import { changeProfilePhoto, getProfile, updateProfile, uploadImageToCloudinary } from '../../API/UserAPI';
 //import { Bell, Camera, User } from 'lucide-react';
 import { FaCamera, FaRegUser } from "react-icons/fa";
 import { useForm } from 'react-hook-form';
@@ -45,58 +45,38 @@ export default function ProfileView() {
         onSuccess: () => {
             toast.success('Perfil actualizado con éxito');
             queryClient.invalidateQueries({ queryKey: ['userProfile']})
+            queryClient.invalidateQueries({ queryKey: ['user']})
         }
     })
 
     const handleUpdateProfile = (FormData) => mutate(FormData)
 
-    const [activeTab, setActiveTab] = useState('perfil')
-    /*
-    // Estado para guardar el usuario y el estado de carga
-    const [loading, setLoading] = useState(true);
+    const { mutate: handlePhotoChange, isPending: isUploading } = useMutation({
+        mutationFn: async (file) => {
+            // A. Subir a la Nube 
+            const { secure_url, public_id } = await uploadImageToCloudinary(file);
+            
+            // B. Guardar URL en tu Base de Datos 
+            return await changeProfilePhoto({ 
+                photo: secure_url, 
+                public_id: public_id 
+            });
+        },
+        onError: (error) => toast.error("Error al actualizar la foto", error),
+        onSuccess: () => {
+            toast.success("Foto actualizada correctamente");
+            queryClient.invalidateQueries({ queryKey: ['userProfile'] }); // Refresca la pantalla
+        }
+    });
 
-    const [notifications, setNotifications] = useState(true); 
-    const [error, setError] = useState(null)
-
-    const [profile, setProfile] = useState({
-        firstname: '',
-        lastname:'',
-        email:'',
-        photo: null,
-    })
-
-
-     useEffect(() => {
-        loadUserProfile();
-    }, []);
-
-    // Función para cargar el perfil del usuario
-    const loadUserProfile = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-
-            const data = await getProfile();
-
-            setProfile({
-                firstname: data.firstname || '',
-                lastname: data.lastname || '',
-                email: data.email || '',
-                photo: data.photo || null,
-            })
-        } catch (error) {
-            console.error('Error al cargar perfil: ', error);
-            setError('No se pudieron cargar los datos del perfil.');
-
-            if (error.response?.status === 401) {
-                localStorage.removeItem('token');
-                window.location.href = '/login';
-            };
-        } finally {
-            setLoading(false);
+    // Función del Input
+    const onFileSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            handlePhotoChange(file); // ¡Dispara la cadena!
         }
     };
-    */
+    const [activeTab, setActiveTab] = useState('perfil')
 
     // Pantalla de carga
     if (isLoading) {
@@ -147,7 +127,12 @@ export default function ProfileView() {
                             </div>
                             <label className='absolute bottom-0 right-0 bg-orange-400 p-2 rounded-full cursor-pointer shadow-lg hover:bg-orange-500 transition-all' >
                                 <FaCamera size={20} className='text-white'/>
-                                <input type="file" className='hidden' accept='image/*' /*onChange={handlePhotoUpload}*/ />
+                                <input 
+                                    type="file" 
+                                    className='hidden' 
+                                    accept='image/*' 
+                                    onChange={onFileSelect}
+                                    disabled={isUploading}  />
                             </label>
                         </div>
                         <h2 className='text-2xl font-bold text-gray-800 mt-4'>{fullName || 'Usuario'}</h2>
