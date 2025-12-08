@@ -1,6 +1,6 @@
 // src/views/habits/HabitsView.jsx
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import {
     getHabits,
     createHabit,

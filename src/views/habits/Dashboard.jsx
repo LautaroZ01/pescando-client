@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getCurrentUser } from '../../API/AuthAPI';
 import { getStats, getHabits } from '../../API/HabitAPI';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export default function Dashboard() {
     const [user, setUser] = useState(null);
