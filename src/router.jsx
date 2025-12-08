@@ -11,6 +11,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import ProfileView from "./views/profile/ProfileView";
 import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
+import CategoryView from "./views/category/categoryView";
 import CommunityView from "./views/community/CommunityViews";
 import Dashboard from "./views/habits/Dashboard";
 import HabitsView from "./views/habits/HabitsView";
@@ -39,6 +40,10 @@ export default function Router() {
                     <Route path="request-code" element={<RequestNewCodeView />} />
                 </Route>
 
+                <Route element={<ProtectedRoute allowedRoles={['admin', 'user']} />}>
+                    <Route path="/dashboard" element={<DashboardLayout />}>
+                        <Route index element={<IndexView />} />
+                        <Route path="category" element={<CategoryView/>} />
                 {/* Área protegida */}
                 <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
                     <Route element={<DashboardLayout />}>
