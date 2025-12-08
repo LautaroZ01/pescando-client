@@ -34,14 +34,10 @@ export default function Router() {
 
                 {/* Área protegida */}
                 <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
-                    <Route element={<DashboardLayout />}>
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/habits" element={<HabitsView />} />
-                <Route element={<ProtectedRoute allowedRoles={['admin', 'user']} />}>
                     <Route path="/dashboard" element={<DashboardLayout />}>
-                        <Route index element={<IndexView />} />
-                        <Route path="community" element={<CommunityView />} />
                         <Route index element={<Dashboard />} />
+                        <Route path="community" element={<CommunityView />} />
+                        <Route path="habits" element={<HabitsView />} />
                     </Route>
                 </Route>
 
@@ -53,4 +49,3 @@ export default function Router() {
         </BrowserRouter>
     );
 }
-
