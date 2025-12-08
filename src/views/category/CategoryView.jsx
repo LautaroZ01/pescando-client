@@ -38,6 +38,10 @@ export default function HabitCategoriesApp() {
   });
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showSaveAnimation, setShowSaveAnimation] = useState(false);
+  const [showDeleteAnimation, setShowDeleteAnimation] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
 
   useEffect(() => {
     fetchCategories();
@@ -125,6 +129,16 @@ export default function HabitCategoriesApp() {
       }
 
       setSuccessMessage(editingCategory ? 'Categoría actualizada correctamente' : 'Categoría creada correctamente');
+            
+      // Mostrar animación de guardado
+      setShowSaveAnimation(true);
+      
+      // Esperar a que termine la animación antes de cerrar el modal
+      setTimeout(() => {
+        setShowSaveAnimation(false);
+        handleCloseModal();
+      }, 2000);
+
       await fetchCategories();
       handleCloseModal();
       setTimeout(() => setSuccessMessage(''), 3000);
@@ -209,7 +223,7 @@ export default function HabitCategoriesApp() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-red-200/80 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -294,8 +308,8 @@ export default function HabitCategoriesApp() {
 
         {/* Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-            <div className="bg-gray-700 rounded-3xl max-w-2xl w-full p-4 sm:p-6 md:p-8 relative my-4 max-h-[95vh] overflow-y-auto" style={{ border: '3px solid #3B82F6' }}>
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-md bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+            <div className="bg-orange-50/20 rounded-3xl max-w-2xl w-full p-4 sm:p-6 md:p-8 relative my-4 max-h-[95vh] overflow-y-auto shadow-2xl" >
               {/* Header del Modal */}
               <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                 <div 
@@ -323,26 +337,26 @@ export default function HabitCategoriesApp() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl bg-gray-600 text-white placeholder-gray-400 border-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
-                  placeholder="Profesional"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl bg-orange-50/60 text-black placeholder-gray-500 border-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+                  placeholder="Escribe un nombre para esta categoría..."
                   disabled={saving}
                 />
               </div>
 
               {/* Aca se agrega descripción */}
-<div className="mb-4 sm:mb-6">
+              <div className="mb-4 sm:mb-6">
                 <label className="block text-white font-semibold mb-2 text-sm sm:text-base">
                   Descripción (opcional)
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl bg-gray-600 text-white placeholder-gray-400 border-none focus:ring-2 focus:ring-blue-400 resize-none text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl bg-orange-50/60 text-black placeholder-gray-500 border-none focus:ring-2 focus:ring-blue-400 resize-none text-sm sm:text-base"
                   placeholder="Describe brevemente esta categoría..."
                   rows="3"
                   maxLength="200"
                   disabled={saving}/>
-                <p className="text-gray-400 text-xs mt-1">{formData.description.length}/200 caracteres</p>
+                <p className="text-gray-600 text-xs mt-1">{formData.description.length}/200 caracteres</p>
               </div>
 
 
@@ -375,15 +389,15 @@ export default function HabitCategoriesApp() {
                 <label className="block text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
                   Ícono de la categoría
                 </label>
-                <div className="grid grid-cols-6 sm:grid-cols-8 gap-1 sm:gap-2 p-2 sm:p-4 bg-gray-600 rounded-xl max-h-40 sm:max-h-48 overflow-y-auto">
+                <div className="grid grid-cols-6 sm:grid-cols-8 gap-1 sm:gap-2 p-2 sm:p-4 bg-orange-50/60 rounded-xl max-h-40 sm:max-h-48 overflow-y-auto">
                   {availableIcons.map((icon) => (
                     <button
                       key={icon}
                       onClick={() => setFormData({ ...formData, icon })}
                       className={`text-2xl sm:text-3xl p-2 sm:p-3 rounded-lg transition-all hover:scale-110 ${
                         formData.icon === icon 
-                          ? 'bg-blue-500 ring-2 sm:ring-4 ring-white shadow-xl' 
-                          : 'bg-gray-700 hover:bg-gray-600'
+                          ? 'bg-orange-400 ring-2 sm:ring-4 ring-white shadow-xl' 
+                          : 'bg-orange-50/60 hover:bg-orange-50/20'
                       }`}
                       disabled={saving}
                       type="button"
@@ -395,7 +409,7 @@ export default function HabitCategoriesApp() {
               </div>
 
               {/* Vista previa */}
-              <div className="mb-4 sm:mb-6 bg-gray-600 rounded-xl p-3 sm:p-4">
+              <div className="mb-4 sm:mb-6 bg-orange-50/60 rounded-xl p-3 sm:p-4">
                 <label className="block text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
                   Vista previa
                 </label>
@@ -403,7 +417,7 @@ export default function HabitCategoriesApp() {
                   className="inline-block px-4 sm:px-6 py-2 sm:py-3 rounded-full text-white font-semibold shadow-lg text-sm sm:text-base"
                   style={{ backgroundColor: formData.color }}
                 >
-                  {formData.name || 'Profesional'}
+                  {formData.name || 'Nombre elegido'} {formData.icon}
                 </div>
               </div>
 
@@ -411,14 +425,15 @@ export default function HabitCategoriesApp() {
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <button
                   onClick={handleCloseModal}
-                  className="w-full py-2.5 sm:py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-full font-semibold transition-colors text-sm sm:text-base"
+                  className="w-full py-2.5 sm:py-3 text-white rounded-full font-semibold transition-all text-sm sm:text-base hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                  style={{ background: 'linear-gradient(135deg, #A3A5BA, #717381)' }}
                   disabled={saving}
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleSave}
-                  className="w-full py-2.5 sm:py-3 text-white rounded-full font-semibold transition-all shadow-lg disabled:opacity-50 text-sm sm:text-base"
+                  className="w-full py-2.5 sm:py-3 text-white rounded-full font-semibold transition-all shadow-lg disabled:opacity-50 text-sm sm:text-base hover:scale-105 hover:shadow-2xl active:scale-95"
                   style={{ background: 'linear-gradient(135deg, #E91E63, #FF9800)' }}
                   disabled={saving}
                 >
