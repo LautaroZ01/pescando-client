@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { getCurrentUser } from '../../API/AuthAPI';
 import { getStats, getHabits } from '../../API/HabitAPI';
 import { Link } from 'react-router';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Dashboard() {
+    const { data } = useAuth()
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -87,7 +89,7 @@ export default function Dashboard() {
                     <h2 className="text-3xl font-bold mb-4">
                         <span className="text-orange-500">¡Qué bueno verte, </span>
                         <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-                            {user?.nombre || user?.username || user?.email?.split('@')[0] || 'Usuario'}!
+                            {data?.firstname || 'Usuario'}!
                         </span>
                     </h2>
 
