@@ -12,6 +12,7 @@ import IndexView from "./views/user/IndexView";
 import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import CommunityView from "./views/community/CommunityViews";
+import Dashboard from "./views/habits/Dashboard";
 
 export default function router() {
     return (
@@ -32,6 +33,7 @@ export default function router() {
                     <Route path="/dashboard" element={<DashboardLayout />}>
                         <Route index element={<IndexView />} />
                         <Route path="community" element={<CommunityView />} />
+                        <Route index element={<Dashboard />} />
                     </Route>
                 </Route>
 
