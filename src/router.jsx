@@ -13,22 +13,30 @@ import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import CommunityView from "./views/community/CommunityViews";
 import Dashboard from "./views/habits/Dashboard";
+import HabitsView from "./views/habits/HabitsView"; //
 
-export default function router() {
+export default function Router() {
     return (
         <BrowserRouter>
             <Routes>
+                {/* Landing pública */}
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<IndexHomeView />} />
                 </Route>
 
+                {/* Auth */}
                 <Route path="/auth" element={<AuthLayout />}>
-                    <Route path="login" element={<LoginView />} index />
+                    <Route index path="login" element={<LoginView />} />
                     <Route path="register" element={<RegisterView />} />
-                    <Route path='confirm-account' element={<ConfirmAccountView />} />
-                    <Route path='request-code' element={<RequestNewCodeView />} />
+                    <Route path="confirm-account" element={<ConfirmAccountView />} />
+                    <Route path="request-code" element={<RequestNewCodeView />} />
                 </Route>
 
+                {/* Área protegida */}
+                <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
+                    <Route element={<DashboardLayout />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/habits" element={<HabitsView />} />
                 <Route element={<ProtectedRoute allowedRoles={['admin', 'user']} />}>
                     <Route path="/dashboard" element={<DashboardLayout />}>
                         <Route index element={<IndexView />} />
@@ -37,12 +45,12 @@ export default function router() {
                     </Route>
                 </Route>
 
-                <Route path='*' element={<NotFoundView />} />
+                {/* 404 */}
+                <Route path="*" element={<NotFoundView />} />
             </Routes>
-            <ToastContainer
-                pauseOnHover={false}
-                pauseOnFocusLoss={false}
-            />
+
+            <ToastContainer pauseOnHover={false} pauseOnFocusLoss={false} />
         </BrowserRouter>
-    )
+    );
 }
+
