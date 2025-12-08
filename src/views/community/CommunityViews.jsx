@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { getCommunityHabits, toggleReaction, rateHabit, copyHabitToMyHabits, getMyPublishedHabits } from '../../API/CommunityAPI';
 import { getHabits, shareMyHabit } from '../../API/HabitAPI';
 import { getUser } from '../../API/AuthAPI';
@@ -21,7 +21,7 @@ export default function CommunityView() {
     const [showTasksModal, setShowTasksModal] = useState(false);
     const [selectedHabitTasks, setSelectedHabitTasks] = useState([]);
     const [selectedHabitName, setSelectedHabitName] = useState('');
-    
+
     // Nuevos estados para categorías dinámicas
     const [allCategories, setAllCategories] = useState(['Todos']);
     const [visibleCategoriesCount, setVisibleCategoriesCount] = useState(5);
@@ -32,7 +32,7 @@ export default function CommunityView() {
             const token = localStorage.getItem('AUTH_TOKEN');
             console.log('Token encontrado:', !!token); // Debug
             setIsAuthenticated(!!token);
-            
+
             if (token) {
                 try {
                     const userData = await getUser();
@@ -46,7 +46,7 @@ export default function CommunityView() {
                 }
             }
         };
-        
+
         checkAuth();
     }, []);
 
@@ -133,7 +133,7 @@ export default function CommunityView() {
 
     const handleShareHabit = async (e) => {
         e.preventDefault();
-        
+
         if (!selectedHabitToShare) {
             alert('Por favor selecciona un hábito para compartir');
             return;
@@ -253,71 +253,6 @@ export default function CommunityView() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50">
-            {/* Header */}
-            <div className="bg-white/70 backdrop-blur-sm shadow-lg p-6 mb-8">
-                <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <span className="text-4xl">🎣</span>
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-                            Comunidad Pescando
-                        </h1>
-                    </div>
-                    <div className="flex gap-3 items-center">
-                        {!isAuthenticated ? (
-                            <>
-                                <button
-                                    onClick={() => navigate('/auth/login')}
-                                    className="px-5 py-2 rounded-full bg-white text-gray-700 hover:bg-gray-100 font-medium transition-all border-2 border-gray-200"
-                                >
-                                    Iniciar sesión
-                                </button>
-                                <button
-                                    onClick={() => navigate('/auth/register')}
-                                    className="px-5 py-2 rounded-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white font-medium shadow-md transition-all hover:scale-105"
-                                >
-                                    Registrarse
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                {/* Información del usuario */}
-                                {currentUser && (
-                                    <div className="flex items-center gap-3 px-4 py-2 bg-white rounded-full border-2 border-gray-200">
-                                        <div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center">
-                                            {currentUser.photo ? (
-                                                <img 
-                                                    src={currentUser.photo} 
-                                                    alt={currentUser.firstname}
-                                                    className="w-full h-full rounded-full object-cover"
-                                                />
-                                            ) : (
-                                                <span className="text-white text-lg font-bold">
-                                                    {currentUser.firstname?.charAt(0).toUpperCase() || '?'}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-sm font-bold text-gray-800">
-                                                {currentUser.firstname} {currentUser.lastname}
-                                            </p>
-                                            <p className="text-xs text-gray-500">
-                                                {currentUser.email}
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-                                
-                                <button
-                                    onClick={() => navigate('/dashboard')}
-                                    className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 hover:from-blue-500 hover:to-cyan-500 text-white font-medium shadow-md transition-all hover:scale-105"
-                                >
-                                    📊 Dashboard
-                                </button>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </div>
 
             <div className="max-w-7xl mx-auto px-4 py-8">
                 {/* Filtros y Acciones */}
@@ -331,16 +266,15 @@ export default function CommunityView() {
                                     setSelectedCategory(cat);
                                     setShowMyHabits(false);
                                 }}
-                                className={`px-4 py-2 rounded-full font-medium transition-all ${
-                                    selectedCategory === cat && !showMyHabits
-                                        ? 'bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-md'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                }`}
+                                className={`px-4 py-2 rounded-full font-medium transition-all ${selectedCategory === cat && !showMyHabits
+                                    ? 'bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-md'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    }`}
                             >
                                 {cat}
                             </button>
                         ))}
-                        
+
                         {/* Botón Ver más/menos */}
                         {(hasMoreCategories || canShowLess) && (
                             <button
@@ -358,31 +292,28 @@ export default function CommunityView() {
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setSortBy('recent')}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                                    sortBy === 'recent'
-                                        ? 'bg-purple-500 text-white'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                }`}
+                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${sortBy === 'recent'
+                                    ? 'bg-purple-500 text-white'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    }`}
                             >
                                 🕒 Recientes
                             </button>
                             <button
                                 onClick={() => setSortBy('rating')}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                                    sortBy === 'rating'
-                                        ? 'bg-purple-500 text-white'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                }`}
+                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${sortBy === 'rating'
+                                    ? 'bg-purple-500 text-white'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    }`}
                             >
                                 ⭐ Mejor valorados
                             </button>
                             <button
                                 onClick={() => setSortBy('popular')}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                                    sortBy === 'popular'
-                                        ? 'bg-purple-500 text-white'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                }`}
+                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${sortBy === 'popular'
+                                    ? 'bg-purple-500 text-white'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    }`}
                             >
                                 🔥 Populares
                             </button>
@@ -416,8 +347,8 @@ export default function CommunityView() {
                         {habits.length === 0 ? (
                             <div className="col-span-full text-center py-16">
                                 <p className="text-2xl text-gray-500">
-                                    {showMyHabits 
-                                        ? '📝 Aún no has compartido ningún hábito' 
+                                    {showMyHabits
+                                        ? '📝 Aún no has compartido ningún hábito'
                                         : '🌐 No hay hábitos compartidos aún'}
                                 </p>
                             </div>
@@ -481,7 +412,7 @@ export default function CommunityView() {
 
                                     {/* Rating */}
                                     <div className="mb-3">
-                                        <StarRating 
+                                        <StarRating
                                             habitId={habit._id}
                                             currentRating={habit.averageRating}
                                             userRating={habit.userRating}
@@ -595,7 +526,7 @@ export default function CommunityView() {
                                 ✕
                             </button>
                         </div>
-                        
+
                         <div className="space-y-3 max-h-96 overflow-y-auto">
                             {selectedHabitTasks.map((task, index) => (
                                 <div
@@ -611,7 +542,7 @@ export default function CommunityView() {
                                 </div>
                             ))}
                         </div>
-                        
+
                         <button
                             onClick={() => setShowTasksModal(false)}
                             className="w-full mt-6 px-6 py-3 rounded-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white font-medium shadow-md transition-all hover:scale-105"
