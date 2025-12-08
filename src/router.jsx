@@ -9,6 +9,7 @@ import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 import DashboardLayout from "./layouts/DashboardLayout";
 import IndexView from "./views/user/IndexView";
+import ProfileView from "./views/profile/ProfileView";
 import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import Dashboard from "./views/habits/Dashboard";
@@ -20,6 +21,9 @@ export default function Router() {
             <Routes>
                 {/* Landing pública */}
                 <Route path="/" element={<HomeLayout />}>
+                    <Route index element={<HeroView />} />
+                    <Route path="/profile" element={<ProfileView />} />
+
                     <Route index element={<IndexHomeView />} />
                 </Route>
 
