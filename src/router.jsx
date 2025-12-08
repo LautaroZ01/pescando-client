@@ -24,9 +24,12 @@ export default function Router() {
                     <Route index element={<IndexHomeView />} />
                 </Route>
 
+                {/* COMUNIDAD PÚBLICA - Sin layout, accesible para todos */}
+                <Route path="/community" element={<CommunityView />} />
+
                 {/* Auth */}
                 <Route path="/auth" element={<AuthLayout />}>
-                    <Route index path="login" element={<LoginView />} />
+                    <Route path="login" element={<LoginView />} />
                     <Route path="register" element={<RegisterView />} />
                     <Route path="confirm-account" element={<ConfirmAccountView />} />
                     <Route path="request-code" element={<RequestNewCodeView />} />
@@ -34,10 +37,9 @@ export default function Router() {
 
                 {/* Área protegida */}
                 <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
-                    <Route path="/dashboard" element={<DashboardLayout />}>
-                        <Route index element={<Dashboard />} />
-                        <Route path="community" element={<CommunityView />} />
-                        <Route path="habits" element={<HabitsView />} />
+                    <Route element={<DashboardLayout />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/habits" element={<HabitsView />} />
                     </Route>
                 </Route>
 
