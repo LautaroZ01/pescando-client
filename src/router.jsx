@@ -8,13 +8,12 @@ import RegisterView from "./views/auth/RegisterView";
 import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 import DashboardLayout from "./layouts/DashboardLayout";
-import IndexView from "./views/user/IndexView";
 import ProfileView from "./views/profile/ProfileView";
 import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import Dashboard from "./views/habits/Dashboard";
-import HabitsView from "./views/habits/HabitsView"; //
-import HeroView from "./views/home/sections/HeroView";
+import HabitsView from "./views/habits/HabitsView";
+import IndexView from "./views/home/IndexView";
 
 export default function Router() {
     return (
@@ -22,7 +21,7 @@ export default function Router() {
             <Routes>
                 {/* Landing pública */}
                 <Route path="/" element={<HomeLayout />}>
-                    <Route index element={<HeroView />} />
+                    <Route index element={<IndexView />} />
                     <Route path="/profile" element={<ProfileView />} />
 
                     <Route index element={<IndexHomeView />} />
