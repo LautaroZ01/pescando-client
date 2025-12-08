@@ -21,13 +21,13 @@ export default function SideBar() {
             <div>
                 <button onClick={() => setIsOpen(!isOpen)} className="p-4 cursor-pointer flex items-center justify-start gap-2">
                     <span className="p-2 rounded-full bg-primary-100 flex items-center justify-center">🎣</span>
-                    <h1 className={`${isOpen ? 'block' : 'hidden'} font-bold title-style`}>Pescando</h1>
+                    <h1 className={`${isOpen ? 'block' : 'hidden'} font-bold title-style text-2xl`}>Pescando</h1>
                 </button>
                 <nav className="p-4 space-y-4">
                     {links.map((link) => (
-                        <NavLink key={link.to} to={link.to} className={({ isActive }) => `flex items-center gap-2 text-gray-800 font-semibold ${isActive ? 'text-orange-500' : ''}`}>
+                        <NavLink key={link.to} to={link.to} className={({ isActive }) => `flex items-center gap-2 text-gray-800 ${isActive ? 'text-orange-500' : 'text-gray-400'}`}>
                             <span className="p-2 rounded-full bg-primary-100 flex items-center justify-center">{link.icon}</span>
-                            {isOpen && <span className="text-sm">{link.label}</span>}
+                            {isOpen && <span className="">{link.label}</span>}
                         </NavLink>
                     ))}
                 </nav>
@@ -37,13 +37,13 @@ export default function SideBar() {
                     <span className="p-2 rounded-full bg-primary-100 flex items-center justify-center text-gray-800">
                         <FaUserCog />
                     </span>
-                    <span className={`${isOpen ? 'block' : 'hidden'} text-white`}>Ver perfil</span>
+                    <span className={`${isOpen ? 'block' : 'hidden'}`}>Ver perfil</span>
                 </Link>
                 <button className="flex items-center gap-2 p-4 cursor-pointer" onClick={logout}>
                     <span className="p-2 rounded-full bg-primary-100 flex items-center justify-center text-gray-800">
                         <LuLogOut />
                     </span>
-                    <span className={`${isOpen ? 'block' : 'hidden'} text-white`}>Cerrar sesión</span>
+                    <span className={`${isOpen ? 'block' : 'hidden'}`}>Cerrar sesión</span>
                 </button>
             </div>
         </aside>

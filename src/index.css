@@ -121,3 +121,19 @@
 .container-section {
     @apply container mx-auto lg:px-8;
 }
+
+.menu-animation {
+    animation: menu-animation 0.3s ease-in-out;
+}
+
+@keyframes menu-animation {
+    0% {
+        opacity: 0;
+        scale: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+        scale: 1;
+    }
+}
