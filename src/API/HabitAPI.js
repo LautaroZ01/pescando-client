@@ -94,3 +94,9 @@ export const deleteHabit = async (habitId) => {
     throw error;
   }
 };
+
+// 🆕 Compartir un hábito personal en la comunidad
+export async function shareMyHabit(habitId) {
+    const { data } = await api.post(`/community/share/${habitId}`);
+    return data;
+}
