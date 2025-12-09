@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getHabits, createHabit, toggleTask, deleteTask, deleteHabit, updateHabit } from '../../API/HabitAPI';
 
-// Modal de confirmación inline
 function ConfirmationModal({ 
     isOpen, 
     onClose, 
@@ -28,12 +27,6 @@ function ConfirmationModal({
                     gradient: 'from-yellow-400 to-orange-500',
                     hoverGradient: 'hover:from-yellow-500 hover:to-orange-600'
                 };
-            case 'info':
-                return {
-                    icon: 'ℹ️',
-                    gradient: 'from-blue-400 to-indigo-500',
-                    hoverGradient: 'hover:from-blue-500 hover:to-indigo-600'
-                };
             default:
                 return {
                     icon: '❓',
@@ -53,9 +46,6 @@ function ConfirmationModal({
             <div 
                 className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4"
                 onClick={(e) => e.stopPropagation()}
-                style={{
-                    animation: 'scaleIn 0.2s ease-out'
-                }}
             >
                 <div className="text-center mb-6">
                     <span className="text-6xl mb-4 block">{styles.icon}</span>
@@ -117,10 +107,6 @@ export default function HabitsView() {
         try {
             setLoading(true);
             const habitsData = await getHabits();
-            console.log('📊 Datos de hábitos:', habitsData);
-            if (habitsData && habitsData.length > 0) {
-                console.log('📝 Primera tarea del primer hábito:', habitsData[0]?.tareas?.[0]);
-            }
             setHabits(habitsData || []);
         } catch (error) {
             console.error('Error al cargar hábitos:', error);
@@ -161,7 +147,6 @@ export default function HabitsView() {
                     habit._id === habitId ? updatedHabit : habit
                 ));
             } else {
-                // Si el hábito se eliminó completamente (no tiene más tareas)
                 setHabits(habits.filter(h => h._id !== habitId));
             }
         } catch (error) {
@@ -198,9 +183,7 @@ export default function HabitsView() {
         setShowModal(true);
     };
 
-    const handleSubmitHabit = async (e) => {
-        e.preventDefault();
-        
+    const handleSubmitHabit = async () => {
         const tareasLimpias = newHabit.tareas.filter(t => t.trim() !== '');
         
         if (!newHabit.nombre || !newHabit.categoria || tareasLimpias.length === 0) {
@@ -275,7 +258,7 @@ export default function HabitsView() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50">
+        <div className="min-h-screen bg-gradient-to-br from-pink-100 via-orange-100 to-orange-200">
             <div className="ml-20 p-8">
                 <div className="flex justify-between items-center mb-8">
                     <div>
@@ -321,9 +304,12 @@ export default function HabitsView() {
                                             <p className="text-sm text-gray-600">{habit.nombre}</p>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-sm bg-orange-100 text-orange-700 px-3 py-1 rounded-full">
-                                                {completadas}/{habit.tareas.length}
-                                            </span>
+                                            <div className="flex flex-col items-center">
+                                                <span className="text-xs text-gray-500">Racha</span>
+                                                <span className="text-lg font-bold text-orange-500">
+                                                    {habit.diasConsecutivos || 0} 🔥
+                                                </span>
+                                            </div>
                                             <button
                                                 onClick={() => openEditModal(habit)}
                                                 className="text-blue-500 hover:text-blue-700 transition p-2"
@@ -392,7 +378,7 @@ export default function HabitsView() {
                         <h2 className="text-3xl font-bold text-gray-800 mb-6">
                             {editingHabit ? 'Editar hábito' : 'Nuevo hábito'}
                         </h2>
-                        <form onSubmit={handleSubmitHabit}>
+                        <div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 font-medium mb-2">
                                     Nombre del hábito
@@ -404,7 +390,6 @@ export default function HabitsView() {
                                     placeholder="Ej: Programar diariamente"
                                     className="w-full px-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-orange-400 focus:outline-none"
                                     disabled={submitting}
-                                    required
                                 />
                             </div>
                             <div className="mb-4">
@@ -418,7 +403,6 @@ export default function HabitsView() {
                                     placeholder="Ej: Web Developer"
                                     className="w-full px-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-orange-400 focus:outline-none"
                                     disabled={submitting}
-                                    required
                                 />
                             </div>
                             <div className="mb-6">
@@ -466,14 +450,15 @@ export default function HabitsView() {
                                     Cancelar
                                 </button>
                                 <button
-                                    type="submit"
+                                    type="button"
+                                    onClick={handleSubmitHabit}
                                     className="flex-1 px-6 py-3 rounded-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white font-medium shadow-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled={submitting}
                                 >
                                     {submitting ? 'Guardando...' : (editingHabit ? 'Actualizar' : 'Crear')}
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             )}
