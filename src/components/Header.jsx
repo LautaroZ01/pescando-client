@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { FaUser } from 'react-icons/fa'
 import { LuLogOut } from 'react-icons/lu'
 import { FaFishFins } from "react-icons/fa6";
+import ProfileIcon from './ui/ProfileIcon'
 
 export default function Header() {
     const { data, isLoading, logout } = useAuth()
@@ -25,14 +26,22 @@ export default function Header() {
                     <div className='relative'>
                         <button className="flex gap-4 cursor-pointer" onClick={toggleMenu}>
                             <div>
-                                {data.photo ? <img src={data.photo} alt="" className='w-12 h-12 rounded-full' /> : <FaUser />}
+                                <ProfileIcon
+                                    src = {data?.photo}
+                                    lt = 'Foto de perfil'
+                                    size = 'md'
+                                /> 
                             </div>
                         </button>
 
                         <nav className={`${isOpen ? 'block' : 'hidden'} absolute right-0 top-full mt-1 bg-white backdrop-blur-2xl shadow-lg rounded-md min-w-64 flex flex-col gap-6 p-4 menu-animation`}>
                             <div className='flex items-center gap-2 border-b border-gray-200/80 py-4 group transition-all duration-pro'>
                                 <div>
-                                    {data.photo ? <img src={data.photo} alt="" className='w-12 h-12 rounded-full' /> : <FaUser />}
+                                   <ProfileIcon
+                                    src = {data?.photo}
+                                    lt = 'Foto de perfil'
+                                    size = 'md'
+                                    /> 
                                 </div>
                                 <div className='flex flex-col group-hover:text-orange-400 transition-all duration-pro'>
                                     <strong>{data.firstname} {data.lastname}</strong>

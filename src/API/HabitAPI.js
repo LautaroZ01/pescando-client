@@ -100,3 +100,14 @@ export async function shareMyHabit(habitId) {
     const { data } = await api.post(`/community/share/${habitId}`);
     return data;
 }
+
+export const getGraphData = async () => {
+  try {
+    const { data } = await api.get('/habits/graph-data')
+    return data
+  } catch (error) {
+    console.error('Error al obtener datos de la gráfica:', error)
+    throw error
+    
+  }
+}

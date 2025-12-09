@@ -6,6 +6,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import ErrorMessage from '../../components/ui/ErrorMessage';
 import ProfileIcon from '../../components/ui/ProfileIcon';
+import HabitsCharts from './HabitsChart';
+import { getStats } from '../../API/HabitAPI';
 
 
 export default function ProfileView() {
@@ -21,7 +23,6 @@ export default function ProfileView() {
 
     const watchFirstname = watch('firstname')
     const watchLastname = watch('lastname')
-
 
     const { data: userData, isLoading } = useQuery({
         queryKey: ['userProfile'],
@@ -77,6 +78,15 @@ export default function ProfileView() {
         }
     };
     const [activeTab, setActiveTab] = useState('perfil')
+    const [stats, setStats] = useState(null)
+
+    useEffect(() => {
+        if (activeTab === 'gráficas') {
+            getStats()
+                .then(data => setStats(data))
+                .catch(error => console.error("Error cargando stats:", error))
+        }
+    }, [activeTab])
 
     // Pantalla de carga
     if (isLoading) {
@@ -143,56 +153,69 @@ export default function ProfileView() {
 
                 {/* Contenido */}
                 <div className='bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg'>
-                {activeTab === 'perfil' && (
-                    <form onSubmit={handleSubmit(handleUpdateProfile)} className='space-y-6'>
-                        <div>
-                            <label className='block text-gray-700 font-semibold mb-2'>Nombre</label>
-                            <input type="text"
-                                id="firstname"
-                               {...register('firstname', {
-                                    required: 'El nombre es requerido',
-                                    minLength: {
-                                        value: 2,
-                                        message: 'El nombre debe tener al menos 2 caracteres'
-                                    }
-                                })}
-                                className='w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-400 outline-none transition-all'/>
-                            {errors.firstname && (
-                                <ErrorMessage>{errors.firstname.message}</ErrorMessage>
-                            )}
+                    {activeTab === 'perfil' && (
+                        <form onSubmit={handleSubmit(handleUpdateProfile)} className='space-y-6'>
+                            <div>
+                                <label className='block text-gray-700 font-semibold mb-2'>Nombre</label>
+                                <input type="text"
+                                    id="firstname"
+                                {...register('firstname', {
+                                        required: 'El nombre es requerido',
+                                        minLength: {
+                                            value: 2,
+                                            message: 'El nombre debe tener al menos 2 caracteres'
+                                        }
+                                    })}
+                                    className='w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-400 outline-none transition-all'/>
+                                {errors.firstname && (
+                                    <ErrorMessage>{errors.firstname.message}</ErrorMessage>
+                                )}
+                            </div>
+                            <div>
+                                <label className='block text-gray-700 font-semibold mb-2'>Apellido</label>
+                                <input type="text"
+                                    id="lastname"
+                                {...register('lastname', {
+                                        required: 'El apellido es requerido',
+                                        minLength: {
+                                            value: 2,
+                                            message: 'El apellido debe tener al menos 2 caracteres'
+                                        }
+                                    })}
+                                    className='w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-400 outline-none transition-all'/>
+                                {errors.lastname && (
+                                    <ErrorMessage>{errors.lastname.message}</ErrorMessage>
+                                )}
+                            </div>
+                            <div>
+                                <label className='block text-gray-700 font-semibold mb-2'>Email</label>
+                                <input type="email"
+                                    id="email"
+                                    readOnly
+                                {...register('email')}
+                                    className='w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-gray-100 text-gray-600 focus:border-gray-400 outline-none transition-all' />
+                            </div>
+                            
+                            <button type='submit' className='w-full bg-gradient-to-r from-orange-400 to-pink-400 text-white font-bold py-3 rounded-xl hover:shadow-xl transition-all cursor-pointer'>Guardar Cambios</button>
+                        </form>
+                    )}
+
+                    {activeTab === 'gráficas' && (
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                                {/* Métricas rápidas */}
+                                <div className="bg-gradient-to-br from-orange-100 to-white p-6 rounded-2xl shadow-sm">
+                                <p className="text-gray-500 text-sm font-medium">Total de Hábitos</p>
+                                <p className="text-3xl font-bold text-orange-600">{stats ? stats.totalHabits : '-'}</p>
+                                </div>
+                                {/* Aquí pondremos las rachas y logros más adelante */}
+                            </div>
+
+                            <HabitsCharts />
                         </div>
-                        <div>
-                            <label className='block text-gray-700 font-semibold mb-2'>Apellido</label>
-                            <input type="text"
-                                id="lastname"
-                               {...register('lastname', {
-                                    required: 'El apellido es requerido',
-                                    minLength: {
-                                        value: 2,
-                                        message: 'El apellido debe tener al menos 2 caracteres'
-                                    }
-                                })}
-                                className='w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-400 outline-none transition-all'/>
-                            {errors.lastname && (
-                                <ErrorMessage>{errors.lastname.message}</ErrorMessage>
-                            )}
-                        </div>
-                        <div>
-                            <label className='block text-gray-700 font-semibold mb-2'>Email</label>
-                            <input type="email"
-                                id="email"
-                                readOnly
-                               {...register('email')}
-                                className='w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-gray-100 text-gray-600 focus:border-gray-400 outline-none transition-all' />
-                        </div>
-                        
-                        <button type='submit' className='w-full bg-gradient-to-r from-orange-400 to-pink-400 text-white font-bold py-3 rounded-xl hover:shadow-xl transition-all cursor-pointer'>Guardar Cambios</button>
-                    </form>
-                )}
+                    )}
 
                 </div>
-
-
 
 
             </div>
