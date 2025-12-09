@@ -111,3 +111,13 @@ export const getGraphData = async () => {
     
   }
 }
+
+export const getCategoryDistribution = async() => {
+    try {
+        const { data } = await api.get('/habits/category-distribution')
+        return data
+    } catch (error) {
+        console.error('Error al obtener distribución:', error)
+        throw error
+    }
+}

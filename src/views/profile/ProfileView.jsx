@@ -8,6 +8,7 @@ import ErrorMessage from '../../components/ui/ErrorMessage';
 import ProfileIcon from '../../components/ui/ProfileIcon';
 import HabitsCharts from './HabitsChart';
 import { getStats } from '../../API/HabitAPI';
+import CategoryPieChart from './CategoryPieChart';
 
 
 export default function ProfileView() {
@@ -67,6 +68,7 @@ export default function ProfileView() {
         onSuccess: () => {
             toast.success("Foto actualizada correctamente");
             queryClient.invalidateQueries({ queryKey: ['userProfile'] }); // Refresca la pantalla
+            queryClient.invalidateQueries({ queryKey: ['user'] })
         }
     });
 
@@ -202,16 +204,28 @@ export default function ProfileView() {
 
                     {activeTab === 'gráficas' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            
+                            {/* --- Sección de Tarjetas de Métricas  --- */}
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                                {/* Métricas rápidas */}
                                 <div className="bg-gradient-to-br from-orange-100 to-white p-6 rounded-2xl shadow-sm">
-                                <p className="text-gray-500 text-sm font-medium">Total de Hábitos</p>
-                                <p className="text-3xl font-bold text-orange-600">{stats ? stats.totalHabits : '-'}</p>
+                                    <p className="text-gray-500 text-sm font-medium">Total de Hábitos</p>
+                                    <p className="text-3xl font-bold text-orange-600">
+                                        {stats ? stats.totalHabits : '-'}
+                                    </p>
                                 </div>
-                                {/* Aquí pondremos las rachas y logros más adelante */}
+                                
                             </div>
 
-                            <HabitsCharts />
+                            {/* --- Sección de Gráficas --- */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                
+                                {/* Gráfica de Barras (Izquierda) */}
+                                <HabitsCharts />
+
+                                {/* Gráfica de Pastel (Derecha) */}
+                                <CategoryPieChart />
+                                
+                            </div>
                         </div>
                     )}
 
