@@ -1,182 +1,277 @@
-// src/views/habits/HabitsView.jsx
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router';
-import {
-    getHabits,
-    createHabit,
-    toggleTask,
-    deleteTask,
-    updateHabit,
-    deleteHabit,
-} from '../../API/HabitAPI';
+import { getHabits, createHabit, toggleTask, deleteTask, deleteHabit, updateHabit } from '../../API/HabitAPI';
+
+// Configuración de la API
+const API_BASE_URL = 'http://localhost:3000/api';
+
+function ConfirmationModal({ 
+    isOpen, 
+    onClose, 
+    onConfirm, 
+    title, 
+    message, 
+    confirmText = "Confirmar",
+    cancelText = "Cancelar",
+    type = "danger"
+}) {
+    if (!isOpen) return null;
+
+    const getTypeStyles = () => {
+        switch(type) {
+            case 'danger':
+                return {
+                    icon: '🗑️',
+                    gradient: 'from-red-400 to-pink-500',
+                    hoverGradient: 'hover:from-red-500 hover:to-pink-600'
+                };
+            case 'warning':
+                return {
+                    icon: '⚠️',
+                    gradient: 'from-yellow-400 to-orange-500',
+                    hoverGradient: 'hover:from-yellow-500 hover:to-orange-600'
+                };
+            default:
+                return {
+                    icon: '❓',
+                    gradient: 'from-gray-400 to-gray-500',
+                    hoverGradient: 'hover:from-gray-500 hover:to-gray-600'
+                };
+        }
+    };
+
+    const styles = getTypeStyles();
+
+    return (
+        <div 
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
+            onClick={onClose}
+        >
+            <div 
+                className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="text-center mb-6">
+                    <span className="text-6xl mb-4 block">{styles.icon}</span>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                        {title}
+                    </h2>
+                    <p className="text-gray-600">
+                        {message}
+                    </p>
+                </div>
+
+                <div className="flex gap-3">
+                    <button
+                        onClick={onClose}
+                        className="flex-1 px-6 py-3 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium transition-all"
+                    >
+                        {cancelText}
+                    </button>
+                    <button
+                        onClick={() => {
+                            onConfirm();
+                            onClose();
+                        }}
+                        className={`flex-1 px-6 py-3 rounded-full bg-gradient-to-r ${styles.gradient} ${styles.hoverGradient} text-white font-medium shadow-md transition-all hover:scale-105`}
+                    >
+                        {confirmText}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function HabitsView() {
-    const location = useLocation();
-
     const [loading, setLoading] = useState(true);
     const [habits, setHabits] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [editingHabit, setEditingHabit] = useState(null); // null = creando, objeto = editando
-    const [newHabit, setNewHabit] = useState({
+    const [editingHabit, setEditingHabit] = useState(null);
+    const [newHabit, setNewHabit] = useState({ 
         nombre: '',
-        categoria: '',
-        tareas: [''],
+        categoria: '', 
+        tareas: ['']
     });
     const [submitting, setSubmitting] = useState(false);
 
+    const [confirmModal, setConfirmModal] = useState({
+        isOpen: false,
+        type: 'danger',
+        title: '',
+        message: '',
+        onConfirm: () => {}
+    });
+
     useEffect(() => {
         loadHabits();
+        loadCategories();
     }, []);
-
-    // abrir modal si vengo del Dashboard con state { openModal: true }
-    useEffect(() => {
-        if (location.state?.openModal) {
-            setShowModal(true);
-        }
-    }, [location.state]);
 
     const loadHabits = async () => {
         try {
             setLoading(true);
             const habitsData = await getHabits();
-            // ahora la API ya devuelve [{ _id, nombre, categoria, tareas: [...] }]
             setHabits(habitsData || []);
         } catch (error) {
             console.error('Error al cargar hábitos:', error);
+            setHabits([]);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleToggleTarea = async (habitId, tareaId) => {
+    const loadCategories = async () => {
         try {
-            const updatedHabit = await toggleTask(habitId, tareaId);
+            const response = await fetch(`${API_BASE_URL}/category`, {
+                credentials: 'include',
+                headers: { 'Accept': 'application/json' }
+            });
 
-            setHabits((prev) =>
-                prev.map((h) => (h._id === habitId ? updatedHabit : h))
-            );
+            if (response.ok) {
+                const data = await response.json();
+                setCategories(data);
+            }
         } catch (error) {
-            console.error('Error al actualizar tarea:', error);
-            alert('Error al actualizar la tarea');
+            console.error('Error al cargar categorías:', error);
         }
     };
 
-
-    const handleDeleteTarea = async (habitId, tareaId) => {
-        if (!confirm('¿Estás seguro de eliminar esta tarea?')) return;
-
+    const handleToggleTarea = async (habitId, taskId) => {
         try {
-            const updatedHabit = await deleteTask(habitId, tareaId);
+            const updatedHabit = await toggleTask(habitId, taskId);
+            
+            setHabits(habits.map(habit => 
+                habit._id === habitId ? updatedHabit : habit
+            ));
+        } catch (error) {
+            console.error('Error al actualizar tarea:', error);
+        }
+    };
 
-            // Si el back devuelve null (se borró el hábito porque no quedaban tareas)
-            if (!updatedHabit) {
-                setHabits((prev) => prev.filter((h) => h._id !== habitId));
+    const openDeleteModal = (habitId, taskId, tareaTitulo) => {
+        setConfirmModal({
+            isOpen: true,
+            type: 'danger',
+            title: '¿Eliminar tarea?',
+            message: `¿Estás seguro de que deseas eliminar "${tareaTitulo}"? Esta acción no se puede deshacer.`,
+            onConfirm: () => handleDeleteTask(habitId, taskId)
+        });
+    };
+
+    const handleDeleteTask = async (habitId, taskId) => {
+        try {
+            const updatedHabit = await deleteTask(habitId, taskId);
+            
+            if (updatedHabit) {
+                setHabits(habits.map(habit => 
+                    habit._id === habitId ? updatedHabit : habit
+                ));
             } else {
-                setHabits((prev) =>
-                    prev.map((h) => (h._id === habitId ? updatedHabit : h))
-                );
+                setHabits(habits.filter(h => h._id !== habitId));
             }
         } catch (error) {
             console.error('Error al eliminar tarea:', error);
-            alert('Error al eliminar la tarea');
         }
     };
 
-    // manejo de inputs de tareas múltiples en el modal
-    const handleTaskChange = (index, value) => {
-        const updated = [...newHabit.tareas];
-        updated[index] = value;
-        setNewHabit({ ...newHabit, tareas: updated });
-    };
-
-    const handleAddTaskField = () => {
-        setNewHabit({ ...newHabit, tareas: [...newHabit.tareas, ''] });
-    };
-
-    const handleRemoveTaskField = (index) => {
-        const updated = [...newHabit.tareas];
-        updated.splice(index, 1);
-        if (updated.length === 0) updated.push('');
-        setNewHabit({ ...newHabit, tareas: updated });
-    };
-
-    const resetForm = () => {
-        setNewHabit({
-            nombre: '',
-            categoria: '',
-            tareas: [''],
+    const openDeleteHabitModal = (habitId, habitNombre) => {
+        setConfirmModal({
+            isOpen: true,
+            type: 'danger',
+            title: '¿Eliminar hábito completo?',
+            message: `¿Estás seguro de que deseas eliminar el hábito "${habitNombre}" con todas sus tareas? Esta acción no se puede deshacer.`,
+            onConfirm: () => handleDeleteHabit(habitId)
         });
-        setEditingHabit(null);
     };
 
-    const handleOpenEditHabit = (habit) => {
-        setEditingHabit(habit);
+    const handleDeleteHabit = async (habitId) => {
+        try {
+            await deleteHabit(habitId);
+            setHabits(habits.filter(h => h._id !== habitId));
+        } catch (error) {
+            console.error('Error al eliminar hábito:', error);
+        }
+    };
+
+    const openEditModal = (habit) => {
+        setEditingHabit(habit._id);
         setNewHabit({
             nombre: habit.nombre,
             categoria: habit.categoria,
-            tareas: habit.tareas.map((t) => t.titulo),
+            tareas: habit.tareas.map(t => t.titulo)
         });
         setShowModal(true);
     };
 
-    const handleDeleteHabit = async (habitId) => {
-        if (!confirm('¿Estás seguro de eliminar este hábito completo?')) return;
-
-        try {
-            await deleteHabit(habitId);
-            setHabits((prev) => prev.filter((h) => h._id !== habitId));
-        } catch (error) {
-            console.error('Error al eliminar hábito:', error);
-            alert('Error al eliminar el hábito');
-        }
-    };
-
-    const handleAgregarHabito = async (e) => {
-        e.preventDefault();
-
-        const tareasLimpias = newHabit.tareas
-            .map((t) => t.trim())
-            .filter(Boolean);
-
-        if (
-            !newHabit.nombre.trim() ||
-            !newHabit.categoria.trim() ||
-            tareasLimpias.length === 0
-        ) {
-            alert('Completá nombre, categoría y al menos una tarea');
+    const handleSubmitHabit = async () => {
+        const tareasLimpias = newHabit.tareas.filter(t => t.trim() !== '');
+        
+        if (!newHabit.nombre || !newHabit.categoria || tareasLimpias.length === 0) {
             return;
         }
 
         try {
             setSubmitting(true);
-
+            
             if (editingHabit) {
-                // 
-                await updateHabit(editingHabit._id, {
+                await updateHabit(editingHabit, {
                     nombre: newHabit.nombre,
                     categoria: newHabit.categoria,
-                    tareas: tareasLimpias,
+                    tareas: tareasLimpias
                 });
             } else {
-                // CREAR
                 await createHabit({
                     nombre: newHabit.nombre,
                     categoria: newHabit.categoria,
-                    tareas: tareasLimpias,
+                    tareas: tareasLimpias
                 });
             }
-
+            
             await loadHabits();
-            resetForm();
-            setShowModal(false);
+            closeModal();
         } catch (error) {
             console.error('Error al guardar hábito:', error);
-            alert('Error al guardar el hábito');
         } finally {
             setSubmitting(false);
         }
     };
 
+    const closeModal = () => {
+        setShowModal(false);
+        setEditingHabit(null);
+        setNewHabit({ nombre: '', categoria: '', tareas: [''] });
+    };
+
+    const closeConfirmModal = () => {
+        setConfirmModal({
+            isOpen: false,
+            type: 'danger',
+            title: '',
+            message: '',
+            onConfirm: () => {}
+        });
+    };
+
+    const addTareaField = () => {
+        setNewHabit({ ...newHabit, tareas: [...newHabit.tareas, ''] });
+    };
+
+    const removeTareaField = (index) => {
+        setNewHabit({ 
+            ...newHabit, 
+            tareas: newHabit.tareas.filter((_, i) => i !== index) 
+        });
+    };
+
+    const updateTareaField = (index, value) => {
+        const newTareas = [...newHabit.tareas];
+        newTareas[index] = value;
+        setNewHabit({ ...newHabit, tareas: newTareas });
+    };
+
+    // Encontrar la categoría seleccionada para mostrar su ícono y color
+    const selectedCategory = categories.find(cat => cat.name === newHabit.categoria);
 
     if (loading) {
         return (
@@ -187,21 +282,15 @@ export default function HabitsView() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50">
+        <div className="min-h-screen bg-gradient-to-br from-pink-100 via-orange-100 to-orange-200">
             <div className="ml-20 p-8">
-                {/* Header */}
                 <div className="flex justify-between items-center mb-8">
                     <div>
                         <h1 className="text-4xl font-bold text-gray-800 mb-2">Mis Hábitos</h1>
-                        <p className="text-gray-600">
-                            Gestiona y da seguimiento a todos tus hábitos
-                        </p>
+                        <p className="text-gray-600">Gestiona y da seguimiento a todos tus hábitos</p>
                     </div>
                     <button
-                        onClick={() => {
-                            resetForm();
-                            setShowModal(true);
-                        }}
+                        onClick={() => setShowModal(true)}
                         className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-6 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105 flex items-center gap-2"
                     >
                         <span className="text-xl">+</span>
@@ -219,10 +308,7 @@ export default function HabitsView() {
                             Crea tu primer hábito para comenzar tu viaje de crecimiento
                         </p>
                         <button
-                            onClick={() => {
-                                resetForm();
-                                setShowModal(true);
-                            }}
+                            onClick={() => setShowModal(true)}
                             className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-8 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105"
                         >
                             Crear mi primer hábito
@@ -230,30 +316,50 @@ export default function HabitsView() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {habits.map((habit) => {
-                            const completadas = habit.tareas.filter(
-                                (t) => t.completado
-                            ).length;
-                            const total = habit.tareas.length || 1;
-                            const progreso = Math.round((completadas / total) * 100);
+                        {habits.map(habit => {
+                            const completadas = habit.tareas.filter(t => t.completado).length;
+                            const progreso = Math.round((completadas / habit.tareas.length) * 100);
+                            const habitCategory = categories.find(cat => cat.name === habit.categoria);
 
                             return (
-                                <div
-                                    key={habit._id}
-                                    className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-6 hover:shadow-xl transition-shadow"
-                                >
+                                <div key={habit._id} className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                                     <div className="flex justify-between items-start mb-4">
-                                        <div>
-                                            <h3 className="text-2xl font-bold text-gray-800">
-                                                {habit.nombre}
-                                            </h3>
-                                            <p className="text-sm text-gray-500 mt-1">
-                                                {habit.categoria}
-                                            </p>
+                                        <div className="flex-1 flex items-center gap-3">
+                                            {habitCategory && (
+                                                <div
+                                                    className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-md flex-shrink-0"
+                                                    style={{ backgroundColor: habitCategory.color }}
+                                                >
+                                                    {habitCategory.icon}
+                                                </div>
+                                            )}
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className="text-2xl font-bold text-gray-800">{habit.categoria}</h3>
+                                                <p className="text-sm text-gray-600">{habit.nombre}</p>
+                                            </div>
                                         </div>
-                                        <span className="text-sm bg-orange-100 text-orange-700 px-3 py-1 rounded-full">
-                                            {completadas}/{habit.tareas.length}
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <div className="flex flex-col items-center">
+                                                <span className="text-xs text-gray-500">Racha</span>
+                                                <span className="text-lg font-bold text-orange-500">
+                                                    {habit.diasConsecutivos || 0} 🔥
+                                                </span>
+                                            </div>
+                                            <button
+                                                onClick={() => openEditModal(habit)}
+                                                className="text-blue-500 hover:text-blue-700 transition p-2"
+                                                title="Editar hábito"
+                                            >
+                                                ✏️
+                                            </button>
+                                            <button
+                                                onClick={() => openDeleteHabitModal(habit._id, habit.categoria)}
+                                                className="text-red-500 hover:text-red-700 transition p-2"
+                                                title="Eliminar hábito completo"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div className="w-full bg-gray-300 rounded-full h-3 mb-6 overflow-hidden shadow-inner">
@@ -264,81 +370,35 @@ export default function HabitsView() {
                                     </div>
 
                                     <div className="space-y-3">
-                                        {habit.tareas.map((tarea) => (
+                                        {habit.tareas.map(tarea => (
                                             <div
                                                 key={tarea._id}
                                                 className="group flex items-center justify-between p-3 bg-white/50 rounded-xl hover:bg-white/70 transition"
                                             >
-                                                <div
+                                                <div 
                                                     className="flex items-center gap-3 flex-1 cursor-pointer"
-                                                    onClick={() =>
-                                                        handleToggleTarea(
-                                                            habit._id,
-                                                            tarea._id
-                                                        )
-                                                    }
+                                                    onClick={() => handleToggleTarea(habit._id, tarea._id)}
                                                 >
-                                                    <div
-                                                        className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${tarea.completado
-                                                            ? 'bg-green-500'
-                                                            : 'bg-gray-300'
-                                                            }`}
-                                                    >
-                                                        {tarea.completado && (
-                                                            <span className="text-white text-sm">
-                                                                ✓
-                                                            </span>
-                                                        )}
+                                                    <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${
+                                                        tarea.completado ? 'bg-green-500' : 'bg-gray-300'
+                                                    }`}>
+                                                        {tarea.completado && <span className="text-white text-sm">✓</span>}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
-                                                        <p
-                                                            className={`text-gray-800 truncate ${tarea.completado
-                                                                ? 'line-through opacity-60'
-                                                                : ''
-                                                                }`}
-                                                        >
+                                                        <p className={`text-gray-800 ${tarea.completado ? 'line-through opacity-60' : ''}`}>
                                                             {tarea.titulo}
                                                         </p>
-                                                        {tarea.diasConsecutivos > 0 && (
-                                                            <p className="text-xs text-orange-500 font-semibold">
-                                                                🔥 {tarea.diasConsecutivos} días
-                                                            </p>
-                                                        )}
                                                     </div>
                                                 </div>
                                                 <button
-                                                    onClick={() =>
-                                                        handleDeleteTarea(
-                                                            habit._id,
-                                                            tarea._id
-                                                        )
-                                                    }
-                                                    className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity p-2"
+                                                    onClick={() => openDeleteModal(habit._id, tarea._id, tarea.titulo)}
+                                                    className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition p-2"
                                                     title="Eliminar tarea"
                                                 >
                                                     🗑️
                                                 </button>
                                             </div>
                                         ))}
-                                    </div>
-
-                                    {/* BOTONES DE EDITAR / ELIMINAR HÁBITO */}
-                                    <div className="mt-4 flex justify-end gap-3">
-                                        <button
-                                            onClick={() => handleOpenEditHabit(habit)}
-                                            className="px-4 py-2 rounded-full text-sm font-medium bg-orange-50 text-orange-600 hover:bg-orange-100 transition"
-                                        >
-                                            Editar hábito
-                                        </button>
-
-                                        <button
-                                            onClick={() =>
-                                                handleDeleteHabit(habit._id)
-                                            }
-                                            className="px-4 py-2 rounded-full text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition"
-                                        >
-                                            Eliminar hábito
-                                        </button>
                                     </div>
                                 </div>
                             );
@@ -350,13 +410,11 @@ export default function HabitsView() {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4">
-                        <h2 className="text-2xl font-bold mb-4">
+                    <div className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-6">
                             {editingHabit ? 'Editar hábito' : 'Nuevo hábito'}
                         </h2>
-
-                        <form onSubmit={handleAgregarHabito}>
-                            {/* Nombre del hábito */}
+                        <div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 font-medium mb-2">
                                     Nombre del hábito
@@ -364,122 +422,125 @@ export default function HabitsView() {
                                 <input
                                     type="text"
                                     value={newHabit.nombre}
-                                    onChange={(e) =>
-                                        setNewHabit({
-                                            ...newHabit,
-                                            nombre: e.target.value,
-                                        })
-                                    }
-                                    placeholder="Ej: Programación Web"
+                                    onChange={(e) => setNewHabit({ ...newHabit, nombre: e.target.value })}
+                                    placeholder="Ej: Programar diariamente"
                                     className="w-full px-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-orange-400 focus:outline-none"
                                     disabled={submitting}
                                 />
                             </div>
 
-                            {/* Categoría */}
+                            {/* Selector de Categoría */}
                             <div className="mb-4">
                                 <label className="block text-gray-700 font-medium mb-2">
                                     Categoría
                                 </label>
-                                <select
-                                    value={newHabit.categoria}
-                                    onChange={(e) =>
-                                        setNewHabit({
-                                            ...newHabit,
-                                            categoria: e.target.value,
-                                        })
-                                    }
-                                    className="w-full px-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-orange-400 focus:outline-none"
-                                    disabled={submitting}
-                                >
-                                    <option value="">Selecciona una categoría</option>
-                                    <option value="Informática">Informática</option>
-                                    <option value="Productividad">Productividad</option>
-                                    <option value="Salud">Salud</option>
-                                    <option value="Otro">Otro</option>
-                                </select>
+                                {categories.length === 0 ? (
+                                    <div className="bg-orange-50 border border-orange-200 rounded-xl p-3 text-sm text-orange-700">
+                                        No tienes categorías creadas. Crea una primero en la sección de Categorías.
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto p-2 bg-white/50 rounded-xl border-2 border-gray-200">
+                                        {categories.map((category) => (
+                                            <button
+                                                key={category._id}
+                                                type="button"
+                                                onClick={() => setNewHabit({ ...newHabit, categoria: category.name })}
+                                                className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
+                                                    newHabit.categoria === category.name
+                                                        ? 'bg-orange-100 ring-2 ring-orange-400 shadow-md'
+                                                        : 'bg-white hover:bg-orange-50'
+                                                }`}
+                                                disabled={submitting}
+                                            >
+                                                <div
+                                                    className="w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-sm flex-shrink-0"
+                                                    style={{ backgroundColor: category.color }}
+                                                >
+                                                    {category.icon}
+                                                </div>
+                                                <div className="text-left flex-1">
+                                                    <p className="font-semibold text-gray-800">{category.name}</p>
+                                                    {category.description && (
+                                                        <p className="text-xs text-gray-500 line-clamp-1">{category.description}</p>
+                                                    )}
+                                                </div>
+                                                {newHabit.categoria === category.name && (
+                                                    <span className="text-orange-500 text-xl">✓</span>
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
-                            {/* Tareas múltiples */}
                             <div className="mb-6">
                                 <label className="block text-gray-700 font-medium mb-2">
                                     Tareas
                                 </label>
-                                <div className="space-y-3">
-                                    {newHabit.tareas.map((tarea, index) => (
-                                        <div key={index} className="flex gap-2">
-                                            <input
-                                                type="text"
-                                                value={tarea}
-                                                onChange={(e) =>
-                                                    handleTaskChange(
-                                                        index,
-                                                        e.target.value
-                                                    )
-                                                }
-                                                placeholder={
-                                                    index === 0
-                                                        ? 'Ej: Practicar React'
-                                                        : 'Otra tarea...'
-                                                }
-                                                className="flex-1 px-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-orange-400 focus:outline-none"
+                                {newHabit.tareas.map((tarea, index) => (
+                                    <div key={index} className="flex gap-2 mb-2">
+                                        <input
+                                            type="text"
+                                            value={tarea}
+                                            onChange={(e) => updateTareaField(index, e.target.value)}
+                                            placeholder={`Tarea ${index + 1}`}
+                                            className="flex-1 px-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-orange-400 focus:outline-none"
+                                            disabled={submitting}
+                                        />
+                                        {newHabit.tareas.length > 1 && (
+                                            <button
+                                                type="button"
+                                                onClick={() => removeTareaField(index)}
+                                                className="px-3 py-2 rounded-xl bg-red-100 text-red-600 hover:bg-red-200 transition"
                                                 disabled={submitting}
-                                            />
-                                            {newHabit.tareas.length > 1 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        handleRemoveTaskField(index)
-                                                    }
-                                                    className="px-3 py-2 rounded-xl bg-red-100 text-red-600 hover:bg-red-200 text-sm"
-                                                    disabled={submitting}
-                                                    title="Eliminar campo"
-                                                >
-                                                    ✕
-                                                </button>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
+                                            >
+                                                🗑️
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
                                 <button
                                     type="button"
-                                    onClick={handleAddTaskField}
-                                    className="mt-3 text-sm text-orange-600 hover:text-orange-700 font-medium"
+                                    onClick={addTareaField}
+                                    className="w-full px-4 py-2 rounded-xl bg-orange-100 text-orange-600 hover:bg-orange-200 transition font-medium"
                                     disabled={submitting}
                                 >
-                                    + Agregar otra tarea
+                                    + Agregar tarea
                                 </button>
                             </div>
-
                             <div className="flex gap-3">
                                 <button
                                     type="button"
-                                    onClick={() => {
-                                        setShowModal(false);
-                                        resetForm(); // esto ya pone editingHabit en null
-                                    }}
+                                    onClick={closeModal}
                                     className="flex-1 px-6 py-3 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium transition"
                                     disabled={submitting}
                                 >
                                     Cancelar
                                 </button>
-
                                 <button
-                                    type="submit"
-                                    disabled={submitting}
-                                    className="flex-1 px-6 py-3 rounded-full bg-gradient-to-r from-orange-400 to-red-400 text-white font-medium shadow-md hover:from-orange-500 hover:to-red-500 transition"
+                                    type="button"
+                                    onClick={handleSubmitHabit}
+                                    className="flex-1 px-6 py-3 rounded-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white font-medium shadow-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={submitting || !newHabit.categoria}
                                 >
-                                    {submitting
-                                        ? 'Guardando...'
-                                        : editingHabit
-                                            ? 'Guardar cambios'
-                                            : 'Crear hábito'}
+                                    {submitting ? 'Guardando...' : (editingHabit ? 'Actualizar' : 'Crear')}
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             )}
+
+            <ConfirmationModal
+                isOpen={confirmModal.isOpen}
+                onClose={closeConfirmModal}
+                onConfirm={confirmModal.onConfirm}
+                title={confirmModal.title}
+                message={confirmModal.message}
+                type={confirmModal.type}
+                confirmText="Eliminar"
+                cancelText="Cancelar"
+            />
         </div>
     );
 }

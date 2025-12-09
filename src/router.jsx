@@ -13,9 +13,9 @@ import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import CommunityView from "./views/community/CommunityViews";
 import Dashboard from "./views/habits/Dashboard";
-import HabitsView from "./views/habits/HabitsView"; //
-import CategoryView from "./views/category/categoryView";
+import HabitsView from "./views/habits/HabitsView";
 import IndexView from "./views/home/IndexView";
+import CategoryView from "./views/category/CategoryView";
 
 export default function Router() {
     return (
@@ -25,7 +25,6 @@ export default function Router() {
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<IndexView />} />
                     <Route path="/profile" element={<ProfileView />} />
-
                     <Route index element={<IndexHomeView />} />
                 </Route>
 
@@ -42,10 +41,10 @@ export default function Router() {
 
                 {/* Área protegida */}
                 <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
-                    <Route element={<DashboardLayout />}>
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/habits" element={<HabitsView />} />
-                        <Route path="/category" element={<CategoryView />} />
+                    <Route path="/dashboard" element={<DashboardLayout />}>
+                        <Route index element={<Dashboard />} />
+                        <Route path="habits" element={<HabitsView />} />
+                        <Route path="category" element={<CategoryView />} />
                     </Route>
                 </Route>
 

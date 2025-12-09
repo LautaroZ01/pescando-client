@@ -4,6 +4,7 @@ import { GrHomeRounded, GrUser } from "react-icons/gr";
 import { FaUserCog, FaUser, FaFish } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { LuLogOut } from "react-icons/lu";
+import { FaTag } from "react-icons/fa";
 
 
 export default function SideBar() {
@@ -12,9 +13,11 @@ export default function SideBar() {
 
     const links = [
         { to: '/dashboard', label: 'Dashboard', icon: <GrHomeRounded /> },
-        { to: '/habits', label: 'Hábitos', icon: <FaUser /> },
+        { to: '/dashboard/habits', label: 'Hábitos', icon: <FaUser /> },
         { to: '/dashboard/boats', label: 'Barcos', icon: <FaFish /> },
-    ]
+        { to: '/dashboard/category', label: 'Categorías', icon: <FaTag /> },
+    ];
+
 
     return (
         <aside className={`bg-gradient-to-b sidebar from-bg-200 to-bg-orange/75 rounded-2xl h-full ${isOpen ? 'w-64' : 'w-16 items-center'} flex flex-col justify-between p-4 transition-all duration-pro`}>
