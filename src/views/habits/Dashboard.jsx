@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getStats, getHabits } from '../../API/HabitAPI';
 import { Link } from 'react-router';
 import { useAuth } from '../../hooks/useAuth';
+import GenerateRoutine from '../../components/habit/GenerateRoutine';
 
 export default function Dashboard() {
     const { data } = useAuth();
@@ -126,7 +127,7 @@ export default function Dashboard() {
 
                         <div className="flex gap-3">
                             <Link
-                                to="/habits"
+                                to="/dashboard/habits"
                                 state={{ openModal: true }}
                                 className="bg-gradient-to-r from-orange-300 to-red-300 hover:from-orange-400 hover:to-red-400 text-white px-6 py-2 rounded-full shadow-md font-medium text-sm transition-all hover:scale-105"
                             >
@@ -134,7 +135,7 @@ export default function Dashboard() {
                             </Link>
 
                             <Link
-                                to="/habits"
+                                to="/dashboard/habits"
                                 className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-6 py-2 rounded-full shadow-md font-medium text-sm transition-all hover:scale-105"
                             >
                                 Ver todos
@@ -191,6 +192,8 @@ export default function Dashboard() {
                     )}
                 </div>
             </div>
+            <GenerateRoutine />
+
         </div>
     );
 }

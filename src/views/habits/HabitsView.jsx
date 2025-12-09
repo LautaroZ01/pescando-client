@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { getHabits, createHabit, toggleTask, deleteTask, deleteHabit, updateHabit } from '../../API/HabitAPI';
+import GenerateRoutine from '../../components/habit/GenerateRoutine';
 
 // Configuración de la API
 const API_BASE_URL = 'http://localhost:3000/api';
 
-function ConfirmationModal({ 
-    isOpen, 
-    onClose, 
-    onConfirm, 
-    title, 
-    message, 
+function ConfirmationModal({
+    isOpen,
+    onClose,
+    onConfirm,
+    title,
+    message,
     confirmText = "Confirmar",
     cancelText = "Cancelar",
     type = "danger"
@@ -17,7 +18,7 @@ function ConfirmationModal({
     if (!isOpen) return null;
 
     const getTypeStyles = () => {
-        switch(type) {
+        switch (type) {
             case 'danger':
                 return {
                     icon: '🗑️',
@@ -42,11 +43,11 @@ function ConfirmationModal({
     const styles = getTypeStyles();
 
     return (
-        <div 
+        <div
             className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
             onClick={onClose}
         >
-            <div 
+            <div
                 className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4"
                 onClick={(e) => e.stopPropagation()}
             >
@@ -88,9 +89,9 @@ export default function HabitsView() {
     const [categories, setCategories] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [editingHabit, setEditingHabit] = useState(null);
-    const [newHabit, setNewHabit] = useState({ 
+    const [newHabit, setNewHabit] = useState({
         nombre: '',
-        categoria: '', 
+        categoria: '',
         tareas: ['']
     });
     const [submitting, setSubmitting] = useState(false);
@@ -100,7 +101,7 @@ export default function HabitsView() {
         type: 'danger',
         title: '',
         message: '',
-        onConfirm: () => {}
+        onConfirm: () => { }
     });
 
     useEffect(() => {
@@ -140,8 +141,8 @@ export default function HabitsView() {
     const handleToggleTarea = async (habitId, taskId) => {
         try {
             const updatedHabit = await toggleTask(habitId, taskId);
-            
-            setHabits(habits.map(habit => 
+
+            setHabits(habits.map(habit =>
                 habit._id === habitId ? updatedHabit : habit
             ));
         } catch (error) {
@@ -162,9 +163,9 @@ export default function HabitsView() {
     const handleDeleteTask = async (habitId, taskId) => {
         try {
             const updatedHabit = await deleteTask(habitId, taskId);
-            
+
             if (updatedHabit) {
-                setHabits(habits.map(habit => 
+                setHabits(habits.map(habit =>
                     habit._id === habitId ? updatedHabit : habit
                 ));
             } else {
@@ -206,14 +207,14 @@ export default function HabitsView() {
 
     const handleSubmitHabit = async () => {
         const tareasLimpias = newHabit.tareas.filter(t => t.trim() !== '');
-        
+
         if (!newHabit.nombre || !newHabit.categoria || tareasLimpias.length === 0) {
             return;
         }
 
         try {
             setSubmitting(true);
-            
+
             if (editingHabit) {
                 await updateHabit(editingHabit, {
                     nombre: newHabit.nombre,
@@ -227,7 +228,7 @@ export default function HabitsView() {
                     tareas: tareasLimpias
                 });
             }
-            
+
             await loadHabits();
             closeModal();
         } catch (error) {
@@ -249,7 +250,7 @@ export default function HabitsView() {
             type: 'danger',
             title: '',
             message: '',
-            onConfirm: () => {}
+            onConfirm: () => { }
         });
     };
 
@@ -258,9 +259,9 @@ export default function HabitsView() {
     };
 
     const removeTareaField = (index) => {
-        setNewHabit({ 
-            ...newHabit, 
-            tareas: newHabit.tareas.filter((_, i) => i !== index) 
+        setNewHabit({
+            ...newHabit,
+            tareas: newHabit.tareas.filter((_, i) => i !== index)
         });
     };
 
@@ -375,13 +376,12 @@ export default function HabitsView() {
                                                 key={tarea._id}
                                                 className="group flex items-center justify-between p-3 bg-white/50 rounded-xl hover:bg-white/70 transition"
                                             >
-                                                <div 
+                                                <div
                                                     className="flex items-center gap-3 flex-1 cursor-pointer"
                                                     onClick={() => handleToggleTarea(habit._id, tarea._id)}
                                                 >
-                                                    <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${
-                                                        tarea.completado ? 'bg-green-500' : 'bg-gray-300'
-                                                    }`}>
+                                                    <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${tarea.completado ? 'bg-green-500' : 'bg-gray-300'
+                                                        }`}>
                                                         {tarea.completado && <span className="text-white text-sm">✓</span>}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
@@ -445,11 +445,10 @@ export default function HabitsView() {
                                                 key={category._id}
                                                 type="button"
                                                 onClick={() => setNewHabit({ ...newHabit, categoria: category.name })}
-                                                className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
-                                                    newHabit.categoria === category.name
-                                                        ? 'bg-orange-100 ring-2 ring-orange-400 shadow-md'
-                                                        : 'bg-white hover:bg-orange-50'
-                                                }`}
+                                                className={`flex items-center gap-3 p-3 rounded-xl transition-all ${newHabit.categoria === category.name
+                                                    ? 'bg-orange-100 ring-2 ring-orange-400 shadow-md'
+                                                    : 'bg-white hover:bg-orange-50'
+                                                    }`}
                                                 disabled={submitting}
                                             >
                                                 <div
@@ -541,6 +540,7 @@ export default function HabitsView() {
                 confirmText="Eliminar"
                 cancelText="Cancelar"
             />
+            <GenerateRoutine />
         </div>
     );
 }
