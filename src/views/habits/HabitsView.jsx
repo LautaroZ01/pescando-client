@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { getHabits, createHabit, toggleTask, deleteTask, deleteHabit, updateHabit } from '../../API/HabitAPI';
 import { getCategories } from '../../API/CategoryAPI';
+import GenerateRoutine from '../../components/habit/GenerateRoutine';
 
 // Configuración de la API
 const API_BASE_URL = 'http://localhost:3000/api';
 
-function ConfirmationModal({ 
-    isOpen, 
-    onClose, 
-    onConfirm, 
-    title, 
-    message, 
+function ConfirmationModal({
+    isOpen,
+    onClose,
+    onConfirm,
+    title,
+    message,
     confirmText = "Confirmar",
     cancelText = "Cancelar",
     type = "danger"
@@ -18,7 +19,7 @@ function ConfirmationModal({
     if (!isOpen) return null;
 
     const getTypeStyles = () => {
-        switch(type) {
+        switch (type) {
             case 'danger':
                 return {
                     icon: '🗑️',
@@ -43,11 +44,11 @@ function ConfirmationModal({
     const styles = getTypeStyles();
 
     return (
-        <div 
+        <div
             className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
             onClick={onClose}
         >
-            <div 
+            <div
                 className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4"
                 onClick={(e) => e.stopPropagation()}
             >
@@ -89,9 +90,9 @@ export default function HabitsView() {
     const [categories, setCategories] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [editingHabit, setEditingHabit] = useState(null);
-    const [newHabit, setNewHabit] = useState({ 
+    const [newHabit, setNewHabit] = useState({
         nombre: '',
-        categoria: '', 
+        categoria: '',
         tareas: ['']
     });
     const [submitting, setSubmitting] = useState(false);
@@ -101,7 +102,7 @@ export default function HabitsView() {
         type: 'danger',
         title: '',
         message: '',
-        onConfirm: () => {}
+        onConfirm: () => { }
     });
     const [filter, setFilter] = useState('all')
 
@@ -111,11 +112,11 @@ export default function HabitsView() {
 
     useEffect(() => {
         loadHabits();
-    }, [filter]); 
+    }, [filter]);
 
     const loadCategories = async () => {
         try {
-            const categoriesData = await getCategories(); 
+            const categoriesData = await getCategories();
             setCategories(categoriesData || []);
         } catch (error) {
             console.error('Error cargando categorías:', error);
@@ -126,7 +127,7 @@ export default function HabitsView() {
         try {
             setLoading(true);
             const statusToSend = filter === 'all' ? '' : filter;
-            
+
             const habitsData = await getHabits(statusToSend);
             setHabits(habitsData || []);
         } catch (error) {
@@ -149,8 +150,8 @@ export default function HabitsView() {
     const handleToggleTarea = async (habitId, taskId) => {
         try {
             const updatedHabit = await toggleTask(habitId, taskId);
-            
-            setHabits(habits.map(habit => 
+
+            setHabits(habits.map(habit =>
                 habit._id === habitId ? updatedHabit : habit
             ));
         } catch (error) {
@@ -171,9 +172,9 @@ export default function HabitsView() {
     const handleDeleteTask = async (habitId, taskId) => {
         try {
             const updatedHabit = await deleteTask(habitId, taskId);
-            
+
             if (updatedHabit) {
-                setHabits(habits.map(habit => 
+                setHabits(habits.map(habit =>
                     habit._id === habitId ? updatedHabit : habit
                 ));
             } else {
@@ -215,7 +216,7 @@ export default function HabitsView() {
 
     const handleSubmitHabit = async () => {
         const tareasLimpias = newHabit.tareas.filter(t => t.trim() !== '');
-        
+
         if (!newHabit.nombre || !newHabit.categoria || tareasLimpias.length === 0) {
             return;
         }
@@ -228,13 +229,13 @@ export default function HabitsView() {
                 categoria: newHabit.categoria,
                 tareas: tareasLimpias
             }
-            
+
             if (editingHabit) {
                 await updateHabit(editingHabit, habitData);
             } else {
                 await createHabit(habitData);
             }
-            
+
             await refreshHabits();
             closeModal();
         } catch (error) {
@@ -256,7 +257,7 @@ export default function HabitsView() {
             type: 'danger',
             title: '',
             message: '',
-            onConfirm: () => {}
+            onConfirm: () => { }
         });
     };
 
@@ -265,9 +266,9 @@ export default function HabitsView() {
     };
 
     const removeTareaField = (index) => {
-        setNewHabit({ 
-            ...newHabit, 
-            tareas: newHabit.tareas.filter((_, i) => i !== index) 
+        setNewHabit({
+            ...newHabit,
+            tareas: newHabit.tareas.filter((_, i) => i !== index)
         });
     };
 
@@ -306,30 +307,27 @@ export default function HabitsView() {
                 <div className='flex gap-2 mb-6'>
                     <button
                         onClick={() => setFilter('all')}
-                        className={`px-4 py-2 rounded-full font-medium transition-all ${
-                            filter === 'all' 
-                                ? 'bg-orange-500 text-white shadow-md' 
+                        className={`px-4 py-2 rounded-full font-medium transition-all ${filter === 'all'
+                                ? 'bg-orange-500 text-white shadow-md'
                                 : 'bg-white/50 text-gray-600 hover:bg-white'
-                        }`}>
+                            }`}>
                         Todos
                     </button>
                     <button
                         onClick={() => setFilter('pending')}
-                        className={`px-4 py-2 rounded-full font-medium transition-all ${
-                            filter === 'pending' 
-                                ? 'bg-orange-500 text-white shadow-md' 
+                        className={`px-4 py-2 rounded-full font-medium transition-all ${filter === 'pending'
+                                ? 'bg-orange-500 text-white shadow-md'
                                 : 'bg-white/50 text-gray-600 hover:bg-white'
-                        }`}
+                            }`}
                     >
                         Pendientes
                     </button>
                     <button
                         onClick={() => setFilter('completed')}
-                        className={`px-4 py-2 rounded-full font-medium transition-all ${
-                            filter === 'completed' 
-                                ? 'bg-green-500 text-white shadow-md' 
+                        className={`px-4 py-2 rounded-full font-medium transition-all ${filter === 'completed'
+                                ? 'bg-green-500 text-white shadow-md'
                                 : 'bg-white/50 text-gray-600 hover:bg-white'
-                        }`}
+                            }`}
                     >
                         Completados
                     </button>
@@ -339,8 +337,8 @@ export default function HabitsView() {
                     <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-12 text-center">
                         <span className="text-6xl mb-4 block">{filter === 'completed' ? '📝' : '🎣'}</span>
                         <p className="text-2xl font-bold text-gray-800 mb-2">
-                            ¡{filter === 'completed' 
-                                ? 'No tienes hábitos completados hoy' 
+                            ¡{filter === 'completed'
+                                ? 'No tienes hábitos completados hoy'
                                 : filter === 'pending'
                                     ? '¡Estás al día! No hay pendientes'
                                     : '¡Comienza a pescar hábitos!'}
@@ -348,12 +346,12 @@ export default function HabitsView() {
                         <p className="text-gray-600 mb-6">
                             Crea tu primer hábito para comenzar tu viaje de crecimiento
                         </p>
-                        {filter === 'all' && (                         <button
-                                onClick={() => setShowModal(true)}
-                                className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-8 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105"
-                            >
-                                Crear mi primer hábito
-                            </button>
+                        {filter === 'all' && (<button
+                            onClick={() => setShowModal(true)}
+                            className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-8 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105"
+                        >
+                            Crear mi primer hábito
+                        </button>
                         )}
                     </div>
                 ) : (
@@ -362,7 +360,7 @@ export default function HabitsView() {
                             const completadas = habit.tareas.filter(t => t.completado).length;
                             const total = habit.tareas.length;
                             const progreso = total > 0 ? Math.round((completadas / total) * 100) : 0;
-                            
+
                             // AHORA accedemos al objeto habit.categoria directamente
                             // Se usa optional chaining (?.) por si la categoría fue borrada
                             const catColor = habit.categoria?.color || '#ccc';
@@ -373,7 +371,7 @@ export default function HabitsView() {
                                 <div key={habit._id} className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="flex-1 flex items-center gap-3">
-                                        {/* Icono de Categoría */}
+                                            {/* Icono de Categoría */}
                                             <div
                                                 className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-md flex-shrink-0"
                                                 style={{ backgroundColor: catColor }}
@@ -424,13 +422,12 @@ export default function HabitsView() {
                                                 key={tarea._id}
                                                 className="group flex items-center justify-between p-3 bg-white/50 rounded-xl hover:bg-white/70 transition"
                                             >
-                                                <div 
+                                                <div
                                                     className="flex items-center gap-3 flex-1 cursor-pointer"
                                                     onClick={() => handleToggleTarea(habit._id, tarea._id)}
                                                 >
-                                                    <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${
-                                                        tarea.completado ? 'bg-green-500' : 'bg-gray-300'
-                                                    }`}>
+                                                    <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${tarea.completado ? 'bg-green-500' : 'bg-gray-300'
+                                                        }`}>
                                                         {tarea.completado && <span className="text-white text-sm">✓</span>}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
@@ -494,11 +491,10 @@ export default function HabitsView() {
                                                 key={category._id}
                                                 type="button"
                                                 onClick={() => setNewHabit({ ...newHabit, categoria: category._id })}
-                                                className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
-                                                    newHabit.categoria === category._id
+                                                className={`flex items-center gap-3 p-3 rounded-xl transition-all ${newHabit.categoria === category._id
                                                         ? 'bg-orange-100 ring-2 ring-orange-400 shadow-md'
                                                         : 'bg-white hover:bg-orange-50'
-                                                }`}
+                                                    }`}
                                                 disabled={submitting}
                                             >
                                                 <div
@@ -590,6 +586,7 @@ export default function HabitsView() {
                 confirmText="Eliminar"
                 cancelText="Cancelar"
             />
+            <GenerateRoutine />
         </div>
     );
 }

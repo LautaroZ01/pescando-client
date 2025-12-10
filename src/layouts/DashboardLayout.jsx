@@ -3,6 +3,7 @@ import Loader from "../components/ui/Loader"
 import { useAuth } from "../hooks/useAuth"
 import SideBar from "../components/ui/SideBar"
 import Header from "../components/Header"
+import GenerateRoutineModel from "../components/habit/GenerateRoutineModel"
 
 export default function DashboardLayout() {
     const { data, isLoading } = useAuth()
@@ -12,15 +13,18 @@ export default function DashboardLayout() {
     if (!data) return <Navigate to='/' />
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-pink-100 via-orange-100 to-orange-200">
-            <div className="flex h-screen">
-                <div className="h-full p-4">
-                    <SideBar />
-                </div>
-                <div className="grow h-full overflow-y-auto">
-                    <Outlet />
+        <>
+            <div className="min-h-screen bg-gradient-to-br from-pink-100 via-orange-100 to-orange-200">
+                <div className="flex h-screen">
+                    <div className="h-full p-4">
+                        <SideBar />
+                    </div>
+                    <div className="grow h-full overflow-y-auto">
+                        <Outlet />
+                    </div>
                 </div>
             </div>
-        </div>
+            <GenerateRoutineModel />
+        </>
     )
 }

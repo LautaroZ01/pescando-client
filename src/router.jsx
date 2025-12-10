@@ -26,10 +26,10 @@ export default function Router() {
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<IndexView />} />
                     <Route index element={<IndexHomeView />} />
+                    <Route path="/community" element={<CommunityView />} />
                 </Route>
 
                 {/* COMUNIDAD PÚBLICA - Sin layout, accesible para todos */}
-                <Route path="/community" element={<CommunityView />} />
 
                 {/* Auth */}
                 <Route path="/auth" element={<AuthLayout />}>

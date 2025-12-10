@@ -15,7 +15,7 @@ export default function SideBar() {
     const links = [
         { to: '/dashboard', label: 'Dashboard', icon: <GrHomeRounded /> },
         { to: '/dashboard/habits', label: 'Hábitos', icon: <FaUser /> },
-        { to: '/dashboard/boats', label: 'Barcos', icon: <FaFish /> },
+        { to: '/community', label: 'Barcos', icon: <FaFish /> },
         { to: '/dashboard/category', label: 'Categorías', icon: <FaTag /> },
         { to: '/progress', label: 'Progreso', icon: <ImStatsBars /> }
     ];
