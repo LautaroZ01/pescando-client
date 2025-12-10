@@ -90,7 +90,7 @@ export default function GenerateRoutineModel() {
                     <button onClick={closeModal} className="cursor-pointer px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-medium hover:bg-gray-300 transition-colors duration-pro grow">
                         Cancelar
                     </button>
-                    <button className="cursor-pointer bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-6 py-3 rounded-full font-medium transition-all hover:scale-105 grow text-center duration-pro">
+                    <button onClick={closeModal} className="cursor-pointer bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-6 py-3 rounded-full font-medium transition-all hover:scale-105 grow text-center duration-pro">
                         Guardar
                     </button>
                 </footer>
