@@ -26,7 +26,7 @@ export default function ProfileView() {
 
     const { data: userData, isLoading } = useQuery({
         queryKey: ['userProfile'],
-        queryFn: getProfile 
+        queryFn: getProfile
     });
 
     useEffect(() => {
@@ -35,7 +35,7 @@ export default function ProfileView() {
                 firstname: userData.firstname || '',
                 lastname: userData.lastname || '',
                 email: userData.email || '',
-                photo: userData.photo || FaRegUser ,
+                photo: userData.photo || FaRegUser,
             });
         }
     }, [userData, reset]);
@@ -45,8 +45,8 @@ export default function ProfileView() {
         onError: (error) => toast.error(error.message),
         onSuccess: () => {
             toast.success('Perfil actualizado con éxito');
-            queryClient.invalidateQueries({ queryKey: ['userProfile']})
-            queryClient.invalidateQueries({ queryKey: ['user']})
+            queryClient.invalidateQueries({ queryKey: ['userProfile'] })
+            queryClient.invalidateQueries({ queryKey: ['user'] })
         }
     })
 
@@ -56,11 +56,11 @@ export default function ProfileView() {
         mutationFn: async (file) => {
             // A. Subir a la Nube 
             const { secure_url, public_id } = await uploadImageToCloudinary(file);
-            
+
             // B. Guardar URL en tu Base de Datos 
-            return await changeProfilePhoto({ 
-                photo: secure_url, 
-                public_id: public_id 
+            return await changeProfilePhoto({
+                photo: secure_url,
+                public_id: public_id
             });
         },
         onError: (error) => toast.error("Error al actualizar la foto", error),
@@ -92,17 +92,14 @@ export default function ProfileView() {
     // Pantalla de carga
     if (isLoading) {
         return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">Cargando perfil...</p>
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Cargando perfil...</p>
+                </div>
             </div>
-        </div>
         );
     }
-
-    // --- Subtarea 4: Mostrar Foto o Avatar ---
-    const userPhoto = userData?.photo
 
     const fullName = `${watchFirstname || userData.firstname || ''} ${watchLastname || userData.lastname || ''}`.trim()
 
@@ -119,32 +116,31 @@ export default function ProfileView() {
                     <div className='flex flex-col items-center mb-6'>
                         <div className='relative'>
                             <ProfileIcon
-                                src = {userData?.photo}
-                                alt = 'Foto de perfil'
+                                src={userData?.photo}
+                                alt='Foto de perfil'
                             />
                             <label className='absolute bottom-0 right-0 bg-orange-400 p-2 rounded-full cursor-pointer shadow-lg hover:bg-orange-500 transition-all' >
-                                <FaCamera size={20} className='text-white'/>
-                                <input 
-                                    type="file" 
-                                    className='hidden' 
-                                    accept='image/*' 
+                                <FaCamera size={20} className='text-white' />
+                                <input
+                                    type="file"
+                                    className='hidden'
+                                    accept='image/*'
                                     onChange={onFileSelect}
-                                    disabled={isUploading}  />
+                                    disabled={isUploading} />
                             </label>
                         </div>
                         <h2 className='text-2xl font-bold text-gray-800 mt-4'>{fullName || 'Usuario'}</h2>
                         <p className='text-gray-600'>{userData.email}</p>
                     </div>
 
-                    <div className='flex gap-2 justify-center'>     {['perfil', 'logros', 'hábitos'].map(tab => (
+                    <div className='flex gap-2 justify-center'>     {['perfil', 'logros'].map(tab => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`px-6 py-2 rounded-full font-semibold transition-all ${
-                            activeTab === tab
+                            className={`px-6 py-2 rounded-full font-semibold transition-all ${activeTab === tab
                                 ? 'bg-orange-400 text-white shadow-md'
                                 : 'bg-white text-gray-600 hover:bg-orange-100'
-                            }`}
+                                }`}
                         >
                             {tab.charAt(0).toUpperCase() + tab.slice(1)}
                         </button>
@@ -160,14 +156,14 @@ export default function ProfileView() {
                                 <label className='block text-gray-700 font-semibold mb-2'>Nombre</label>
                                 <input type="text"
                                     id="firstname"
-                                {...register('firstname', {
+                                    {...register('firstname', {
                                         required: 'El nombre es requerido',
                                         minLength: {
                                             value: 2,
                                             message: 'El nombre debe tener al menos 2 caracteres'
                                         }
                                     })}
-                                    className='w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-400 outline-none transition-all'/>
+                                    className='w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-400 outline-none transition-all' />
                                 {errors.firstname && (
                                     <ErrorMessage>{errors.firstname.message}</ErrorMessage>
                                 )}
@@ -176,14 +172,14 @@ export default function ProfileView() {
                                 <label className='block text-gray-700 font-semibold mb-2'>Apellido</label>
                                 <input type="text"
                                     id="lastname"
-                                {...register('lastname', {
+                                    {...register('lastname', {
                                         required: 'El apellido es requerido',
                                         minLength: {
                                             value: 2,
                                             message: 'El apellido debe tener al menos 2 caracteres'
                                         }
                                     })}
-                                    className='w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-400 outline-none transition-all'/>
+                                    className='w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-400 outline-none transition-all' />
                                 {errors.lastname && (
                                     <ErrorMessage>{errors.lastname.message}</ErrorMessage>
                                 )}
@@ -193,10 +189,10 @@ export default function ProfileView() {
                                 <input type="email"
                                     id="email"
                                     readOnly
-                                {...register('email')}
+                                    {...register('email')}
                                     className='w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-gray-100 text-gray-600 focus:border-gray-400 outline-none transition-all' />
                             </div>
-                            
+
                             <button type='submit' className='w-full bg-gradient-to-r from-orange-400 to-pink-400 text-white font-bold py-3 rounded-xl hover:shadow-xl transition-all cursor-pointer'>Guardar Cambios</button>
                         </form>
                     )}
@@ -207,7 +203,7 @@ export default function ProfileView() {
                                 <h3 className="text-2xl font-bold text-gray-800">Mis Trofeos</h3>
                                 <p className="text-gray-500 mt-2">Mantén la constancia para liderar el ranking.</p>
                             </div>
-                            <StreakChart />           
+                            <StreakChart />
                         </div>
                     )}
                 </div>

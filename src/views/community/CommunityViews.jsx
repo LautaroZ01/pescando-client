@@ -37,6 +37,9 @@ export default function CommunityView() {
             if (selectedCategory !== 'Todos') {
                 params.categoria = selectedCategory;
             }
+            if (userData) {
+                params.userId = userData._id;
+            }
             const data = await getCommunityHabits(params);
             setHabits(data.habits || []);
         } catch (error) {
@@ -164,18 +167,6 @@ export default function CommunityView() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50">
-            {/* Header */}
-            <div className="bg-white/70 backdrop-blur-sm shadow-lg p-6 mb-8">
-                <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <span className="text-4xl">🎣</span>
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-                            Comunidad Pescando
-                        </h1>
-                    </div>
-                </div>
-            </div>
-
             <div className="max-w-7xl mx-auto px-4 py-8">
                 {/* Filtros y Acciones */}
                 <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-6 mb-8">

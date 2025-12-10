@@ -308,16 +308,16 @@ export default function HabitsView() {
                     <button
                         onClick={() => setFilter('all')}
                         className={`px-4 py-2 rounded-full font-medium transition-all ${filter === 'all'
-                                ? 'bg-orange-500 text-white shadow-md'
-                                : 'bg-white/50 text-gray-600 hover:bg-white'
+                            ? 'bg-orange-500 text-white shadow-md'
+                            : 'bg-white/50 text-gray-600 hover:bg-white'
                             }`}>
                         Todos
                     </button>
                     <button
                         onClick={() => setFilter('pending')}
                         className={`px-4 py-2 rounded-full font-medium transition-all ${filter === 'pending'
-                                ? 'bg-orange-500 text-white shadow-md'
-                                : 'bg-white/50 text-gray-600 hover:bg-white'
+                            ? 'bg-orange-500 text-white shadow-md'
+                            : 'bg-white/50 text-gray-600 hover:bg-white'
                             }`}
                     >
                         Pendientes
@@ -325,8 +325,8 @@ export default function HabitsView() {
                     <button
                         onClick={() => setFilter('completed')}
                         className={`px-4 py-2 rounded-full font-medium transition-all ${filter === 'completed'
-                                ? 'bg-green-500 text-white shadow-md'
-                                : 'bg-white/50 text-gray-600 hover:bg-white'
+                            ? 'bg-green-500 text-white shadow-md'
+                            : 'bg-white/50 text-gray-600 hover:bg-white'
                             }`}
                     >
                         Completados
@@ -338,7 +338,7 @@ export default function HabitsView() {
                         <span className="text-6xl mb-4 block">{filter === 'completed' ? '📝' : '🎣'}</span>
                         <p className="text-2xl font-bold text-gray-800 mb-2">
                             ¡{filter === 'completed'
-                                ? 'No tienes hábitos completados hoy'
+                                ? 'No tienes hábitos completados hoy!'
                                 : filter === 'pending'
                                     ? '¡Estás al día! No hay pendientes'
                                     : '¡Comienza a pescar hábitos!'}
@@ -355,7 +355,7 @@ export default function HabitsView() {
                         )}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {habits.map(habit => {
                             const completadas = habit.tareas.filter(t => t.completado).length;
                             const total = habit.tareas.length;
@@ -373,39 +373,38 @@ export default function HabitsView() {
                                         <div className="flex-1 flex items-center gap-3">
                                             {/* Icono de Categoría */}
                                             <div
-                                                className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-md flex-shrink-0"
+                                                className="size-10 rounded-xl flex items-center justify-center text-2xl shadow-md flex-shrink-0"
                                                 style={{ backgroundColor: catColor }}
                                             >
                                                 {catIcon}
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="text-2xl font-bold text-gray-800 truncate" title={catName}>
+                                                <h3 className="text-lg font-bold text-gray-800 truncate" title={catName}>
                                                     {catName}
                                                 </h3>
                                                 <p className="text-sm text-gray-600 truncate">{habit.nombre}</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="flex flex-col items-center">
-                                                <span className="text-xs text-gray-500">Racha</span>
-                                                <span className="text-lg font-bold text-orange-500">
-                                                    {habit.diasConsecutivos || 0} 🔥
-                                                </span>
-                                            </div>
+                                        <div className="flex items-center">
                                             <button
                                                 onClick={() => openEditModal(habit)}
-                                                className="text-blue-500 hover:text-blue-700 transition p-2"
+                                                className="text-blue-500 hover:text-blue-700 transition p-2 cursor-pointer"
                                                 title="Editar hábito"
                                             >
                                                 ✏️
                                             </button>
                                             <button
                                                 onClick={() => openDeleteHabitModal(habit._id, habit.categoria)}
-                                                className="text-red-500 hover:text-red-700 transition p-2"
+                                                className="text-red-500 hover:text-red-700 transition p-2 cursor-pointer"
                                                 title="Eliminar hábito completo"
                                             >
                                                 🗑️
                                             </button>
+                                            <div className="flex flex-col items-center ml-4">
+                                                <span className="text-lg font-bold text-orange-500">
+                                                    {habit.diasConsecutivos || 0} 🔥
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -492,8 +491,8 @@ export default function HabitsView() {
                                                 type="button"
                                                 onClick={() => setNewHabit({ ...newHabit, categoria: category._id })}
                                                 className={`flex items-center gap-3 p-3 rounded-xl transition-all ${newHabit.categoria === category._id
-                                                        ? 'bg-orange-100 ring-2 ring-orange-400 shadow-md'
-                                                        : 'bg-white hover:bg-orange-50'
+                                                    ? 'bg-orange-100 ring-2 ring-orange-400 shadow-md'
+                                                    : 'bg-white hover:bg-orange-50'
                                                     }`}
                                                 disabled={submitting}
                                             >
