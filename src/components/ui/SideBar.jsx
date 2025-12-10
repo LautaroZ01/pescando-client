@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router";
 import { GrHomeRounded, GrUser } from "react-icons/gr";
 import { FaUserCog, FaUser, FaFish } from "react-icons/fa";
+import { GiBoatFishing } from "react-icons/gi";
 import { useAuth } from "../../hooks/useAuth";
 import { LuLogOut } from "react-icons/lu";
 import { FaTag } from "react-icons/fa";
@@ -14,7 +15,7 @@ export default function SideBar() {
     const links = [
         { to: '/dashboard', label: 'Dashboard', icon: <GrHomeRounded /> },
         { to: '/dashboard/habits', label: 'Hábitos', icon: <FaUser /> },
-        { to: '/dashboard/boats', label: 'Barcos', icon: <FaFish /> },
+        { to: '/community', label: 'Comunidad', icon: <GiBoatFishing /> },
         { to: '/dashboard/category', label: 'Categorías', icon: <FaTag /> },
     ];
 
