@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { getCommunityHabits, toggleReaction, rateHabit, copyHabitToMyHabits, shareMyHabit } from '../../API/CommunityAPI';
 import { getHabits } from '../../API/HabitAPI';
 import { useAuth } from '../../hooks/useAuth';
+import { getCategories } from '../../API/CategoryAPI';
+import { useQuery } from '@tanstack/react-query';
 
 export default function CommunityView() {
     const navigate = useNavigate();
@@ -18,11 +20,15 @@ export default function CommunityView() {
     const [authMessage, setAuthMessage] = useState('');
     const [sortBy, setSortBy] = useState('recent');
 
-    const categories = ['Todos', 'Estudio', 'Programación', 'Salud', 'Lectura', 'Otro'];
-
     useEffect(() => {
         fetchHabits();
     }, [selectedCategory, sortBy]);
+
+    const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
+        queryKey: ['categories'],
+        queryFn: getCategories
+    });
+
 
     const fetchHabits = async () => {
         setLoading(true);
@@ -175,19 +181,25 @@ export default function CommunityView() {
                 <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-6 mb-8">
                     {/* Categorías */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                        {categories.map(cat => (
-                            <button
-                                key={cat}
-                                onClick={() => setSelectedCategory(cat)}
-                                className={`px-4 py-2 rounded-full font-medium transition-all ${
-                                    selectedCategory === cat
+                        {categoriesLoading ? (
+                            <div className="flex items-center gap-2">
+                                <span className="animate-pulse">Cargando categorías...</span>
+                                <span className="animate-spin"></span>
+                            </div>
+                        ) : (
+                            categoriesData.map((cat, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setSelectedCategory(cat.name)}
+                                    className={`px-4 py-2 rounded-full font-medium transition-all ${selectedCategory === cat.name
                                         ? 'bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-md'
                                         : 'bg-white text-gray-700 hover:bg-gray-100'
-                                }`}
-                            >
-                                {cat}
-                            </button>
-                        ))}
+                                        }`}
+                                >
+                                    {cat.name}
+                                </button>
+                            ))
+                        )}
                     </div>
 
                     {/* Ordenamiento y Acciones */}
@@ -196,31 +208,28 @@ export default function CommunityView() {
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setSortBy('recent')}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                                    sortBy === 'recent'
-                                        ? 'bg-purple-500 text-white'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                }`}
+                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${sortBy === 'recent'
+                                    ? 'bg-purple-500 text-white'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    }`}
                             >
                                 🕒 Recientes
                             </button>
                             <button
                                 onClick={() => setSortBy('rating')}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                                    sortBy === 'rating'
-                                        ? 'bg-purple-500 text-white'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                }`}
+                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${sortBy === 'rating'
+                                    ? 'bg-purple-500 text-white'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    }`}
                             >
                                 ⭐ Mejor valorados
                             </button>
                             <button
                                 onClick={() => setSortBy('popular')}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                                    sortBy === 'popular'
-                                        ? 'bg-purple-500 text-white'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                }`}
+                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${sortBy === 'popular'
+                                    ? 'bg-purple-500 text-white'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    }`}
                             >
                                 🔥 Populares
                             </button>
@@ -277,7 +286,7 @@ export default function CommunityView() {
                                     {/* Header con categoría */}
                                     <div className="flex justify-between items-start mb-3">
                                         <span className="px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-orange-400 to-red-400 text-white">
-                                            {habit.categoria}
+                                            {habit.categoria.name}
                                         </span>
                                         {habit.copiedCount > 0 && (
                                             <span className="text-xs text-gray-500">
@@ -300,7 +309,7 @@ export default function CommunityView() {
 
                                     {/* Rating */}
                                     <div className="mb-3">
-                                        <StarRating 
+                                        <StarRating
                                             habitId={habit._id}
                                             currentRating={habit.averageRating}
                                             userRating={habit.userRating}
@@ -398,7 +407,7 @@ export default function CommunityView() {
                         <h2 className="text-3xl font-bold text-gray-800 mb-6">
                             Compartir mis hábitos
                         </h2>
-                        
+
                         {myHabits.length === 0 ? (
                             <div className="text-center py-8">
                                 <p className="text-gray-600 mb-4">
@@ -415,7 +424,7 @@ export default function CommunityView() {
                         ) : (
                             <div className="space-y-4">
                                 {myHabits.map(habit => (
-                                    <div 
+                                    <div
                                         key={habit._id}
                                         className="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-all"
                                     >
@@ -426,7 +435,7 @@ export default function CommunityView() {
                                                 </h3>
                                                 <div className="flex items-center gap-3 mb-2">
                                                     <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-orange-400 to-red-400 text-white">
-                                                        {habit.categoria}
+                                                        {habit.categoria.name}
                                                     </span>
                                                     <span className="text-sm text-gray-600">
                                                         📝 {habit.tareas?.length || 0} tareas
