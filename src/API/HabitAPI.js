@@ -2,16 +2,17 @@
 import api from '../libs/axios';
 
 // Obtener todos los hábitos del usuario
-export const getHabits = async () => {
+export const getHabits = async (status = '') => { 
     try {
-        const { data } = await api.get('/habits');
-        // data.habits = [{ _id, nombre, categoria, tareas: [...] }]
-        return data.habits;
+        // Si hay status, lo agregamos a la URL: /habits?status=pending
+        const query = status ? `?status=${status}` : '';
+        const { data } = await api.get(`/habits${query}`);
+        return data.habits; 
     } catch (error) {
         console.error('Error al obtener hábitos:', error);
         throw error;
     }
-};
+}
 
 // Obtener un hábito específico (si lo usás)
 export const getHabitById = async (habitId) => {
@@ -143,12 +144,14 @@ export const getCategoryPerformance = async () => {
     }
 }
 
-export const getHistoryStats = async () => {
+export const getHistoryStats = async (from, to) => {
     try {
-        const { data } = await api.get('/habits/history-stats');
-        return data; 
+        // Si hay fechas, las pone en la URL: /api/habits/history-stats?from=...&to=...
+        const query = from && to ? `?from=${from}&to=${to}` : '';
+        const { data } = await api.get(`/habits/history-stats${query}`);
+        return data;
     } catch (error) {
-        console.error('Error obteniendo historial:', error);
+        console.error(error);
         throw error;
     }
 };

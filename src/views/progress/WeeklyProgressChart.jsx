@@ -2,11 +2,11 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tool
 import { FaChartLine } from "react-icons/fa";
 import ChartCard from '../../components/ChartCard';
 
-export default function WeeklyProgressChart({ data, loading }) {
+export default function WeeklyProgressChart({ data, loading, subtitle }) {
     return (
         <ChartCard
             title="Progreso Semanal"
-            subtitle="Últimos 7 días"
+            subtitle={subtitle}
             icon={<FaChartLine />}
             isLoading={loading}
             isEmpty={!data || data.length === 0}

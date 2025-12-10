@@ -103,27 +103,39 @@ export default function HabitsView() {
         message: '',
         onConfirm: () => {}
     });
+    const [filter, setFilter] = useState('all')
 
     useEffect(() => {
-        loadData();
+        loadCategories();
     }, []);
 
-    const loadData = async () => {
+    useEffect(() => {
+        loadHabits();
+    }, [filter]); 
+
+    const loadCategories = async () => {
         try {
-            setLoading(true);
-            
-            const [habitsData, categoriesData] = await Promise.all([
-                getHabits(),
-                getCategories()
-            ]);
-            setHabits(habitsData || []);
+            const categoriesData = await getCategories(); 
             setCategories(categoriesData || []);
         } catch (error) {
-            console.error('Error al cargar datos:', error);
+            console.error('Error cargando categorías:', error);
+        }
+    };
+
+    const loadHabits = async () => {
+        try {
+            setLoading(true);
+            const statusToSend = filter === 'all' ? '' : filter;
+            
+            const habitsData = await getHabits(statusToSend);
+            setHabits(habitsData || []);
+        } catch (error) {
+            console.error('Error cargando hábitos:', error);
+            setHabits([]);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     const refreshHabits = async () => {
         try {
@@ -291,21 +303,58 @@ export default function HabitsView() {
                     </button>
                 </div>
 
+                <div className='flex gap-2 mb-6'>
+                    <button
+                        onClick={() => setFilter('all')}
+                        className={`px-4 py-2 rounded-full font-medium transition-all ${
+                            filter === 'all' 
+                                ? 'bg-orange-500 text-white shadow-md' 
+                                : 'bg-white/50 text-gray-600 hover:bg-white'
+                        }`}>
+                        Todos
+                    </button>
+                    <button
+                        onClick={() => setFilter('pending')}
+                        className={`px-4 py-2 rounded-full font-medium transition-all ${
+                            filter === 'pending' 
+                                ? 'bg-orange-500 text-white shadow-md' 
+                                : 'bg-white/50 text-gray-600 hover:bg-white'
+                        }`}
+                    >
+                        Pendientes
+                    </button>
+                    <button
+                        onClick={() => setFilter('completed')}
+                        className={`px-4 py-2 rounded-full font-medium transition-all ${
+                            filter === 'completed' 
+                                ? 'bg-green-500 text-white shadow-md' 
+                                : 'bg-white/50 text-gray-600 hover:bg-white'
+                        }`}
+                    >
+                        Completados
+                    </button>
+                </div>
+
                 {habits.length === 0 ? (
                     <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-12 text-center">
-                        <span className="text-6xl mb-4 block">🎣</span>
+                        <span className="text-6xl mb-4 block">{filter === 'completed' ? '📝' : '🎣'}</span>
                         <p className="text-2xl font-bold text-gray-800 mb-2">
-                            ¡Comienza a pescar hábitos!
+                            ¡{filter === 'completed' 
+                                ? 'No tienes hábitos completados hoy' 
+                                : filter === 'pending'
+                                    ? '¡Estás al día! No hay pendientes'
+                                    : '¡Comienza a pescar hábitos!'}
                         </p>
                         <p className="text-gray-600 mb-6">
                             Crea tu primer hábito para comenzar tu viaje de crecimiento
                         </p>
-                        <button
-                            onClick={() => setShowModal(true)}
-                            className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-8 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105"
-                        >
-                            Crear mi primer hábito
-                        </button>
+                        {filter === 'all' && (                         <button
+                                onClick={() => setShowModal(true)}
+                                className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-8 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105"
+                            >
+                                Crear mi primer hábito
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
