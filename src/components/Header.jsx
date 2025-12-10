@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
 import { FaUser } from 'react-icons/fa'
 import { LuLogOut } from 'react-icons/lu'
+import { GiBoatFishing } from "react-icons/gi";
 import { FaFishFins } from "react-icons/fa6";
 import ProfileIcon from './ui/ProfileIcon'
 
@@ -57,6 +58,10 @@ export default function Header() {
                                 <FaFishFins className='text-gray-600 group-hover:text-orange-400 transition duration-pro' />
                                 <span>Dashboard</span>
                             </Link>
+                            <Link to="/community" className='flex items-center gap-4 hover:text-orange-400 group transition-all duration-pro'>
+                                <GiBoatFishing className='text-gray-600 group-hover:text-orange-400 transition duration-pro' />
+                                <span>Comunidad</span>
+                            </Link>
                             <button onClick={logout} className='flex items-center gap-4 border-t border-gray-200/80 pt-4 hover:text-orange-400 group transition-all duration-pro cursor-pointer'>
                                 <LuLogOut className='text-gray-600 group-hover:text-orange-400 transition duration-pro' />
                                 <span>Cerrar Sesión</span>
@@ -65,6 +70,7 @@ export default function Header() {
                     </div>
                 ) : (
                     <nav className="flex">
+                        <Link to="/community" className='px-8 py-2 rounded-full hover:scale-105 transition duration-pro'>Comunidad</Link>
                         <Link to="/auth/login" className='px-8 py-2 rounded-full hover:scale-105 transition duration-pro'>Iniciar Sesión</Link>
                         <Link to="/auth/register" className='px-8 py-2 btn-primary'>Registrarse</Link>
                     </nav>
