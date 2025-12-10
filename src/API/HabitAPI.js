@@ -121,3 +121,24 @@ export const getCategoryDistribution = async() => {
         throw error
     }
 }
+
+export const getStreaksData = async () => {
+    try {
+        const { data } = await api.get('habits/streaks-data')
+        return data
+    } catch (error) {
+        console.error('Error obteniendo rachas:', error)
+        throw error
+        
+    }
+}
+
+export const getCategoryPerformance = async () => {
+    try {
+        const { data } = await api.get('/habits/category-performance');
+        return data;
+    } catch (error) {
+        console.error('Error obteniendo rendimiento:', error);
+        throw error;
+    }
+}

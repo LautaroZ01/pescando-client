@@ -5,6 +5,7 @@ import { FaUserCog, FaUser, FaFish } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { LuLogOut } from "react-icons/lu";
 import { FaTag } from "react-icons/fa";
+import { ImStatsBars } from "react-icons/im";
 
 
 export default function SideBar() {
@@ -16,6 +17,7 @@ export default function SideBar() {
         { to: '/dashboard/habits', label: 'Hábitos', icon: <FaUser /> },
         { to: '/dashboard/boats', label: 'Barcos', icon: <FaFish /> },
         { to: '/dashboard/category', label: 'Categorías', icon: <FaTag /> },
+        { to: '/progress', label: 'Progreso', icon: <ImStatsBars /> }
     ];
 
 

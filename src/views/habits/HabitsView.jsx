@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getHabits, createHabit, toggleTask, deleteTask, deleteHabit, updateHabit } from '../../API/HabitAPI';
+import { getCategories } from '../../API/CategoryAPI';
 
 // Configuración de la API
 const API_BASE_URL = 'http://localhost:3000/api';
@@ -104,38 +105,34 @@ export default function HabitsView() {
     });
 
     useEffect(() => {
-        loadHabits();
-        loadCategories();
+        loadData();
     }, []);
 
-    const loadHabits = async () => {
+    const loadData = async () => {
         try {
             setLoading(true);
-            const habitsData = await getHabits();
+            
+            const [habitsData, categoriesData] = await Promise.all([
+                getHabits(),
+                getCategories()
+            ]);
             setHabits(habitsData || []);
+            setCategories(categoriesData || []);
         } catch (error) {
-            console.error('Error al cargar hábitos:', error);
-            setHabits([]);
+            console.error('Error al cargar datos:', error);
         } finally {
             setLoading(false);
         }
-    };
+    }
 
-    const loadCategories = async () => {
+    const refreshHabits = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/category`, {
-                credentials: 'include',
-                headers: { 'Accept': 'application/json' }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setCategories(data);
-            }
+            const habitsData = await getHabits();
+            setHabits(habitsData || []);
         } catch (error) {
-            console.error('Error al cargar categorías:', error);
+            console.error("Error refrescando hábitos:", error);
         }
-    };
+    }
 
     const handleToggleTarea = async (habitId, taskId) => {
         try {
@@ -198,7 +195,7 @@ export default function HabitsView() {
         setEditingHabit(habit._id);
         setNewHabit({
             nombre: habit.nombre,
-            categoria: habit.categoria,
+            categoria: habit.categoria?._id,
             tareas: habit.tareas.map(t => t.titulo)
         });
         setShowModal(true);
@@ -213,22 +210,20 @@ export default function HabitsView() {
 
         try {
             setSubmitting(true);
-            
-            if (editingHabit) {
-                await updateHabit(editingHabit, {
-                    nombre: newHabit.nombre,
-                    categoria: newHabit.categoria,
-                    tareas: tareasLimpias
-                });
-            } else {
-                await createHabit({
-                    nombre: newHabit.nombre,
-                    categoria: newHabit.categoria,
-                    tareas: tareasLimpias
-                });
+
+            const habitData = {
+                nombre: newHabit.nombre,
+                categoria: newHabit.categoria,
+                tareas: tareasLimpias
             }
             
-            await loadHabits();
+            if (editingHabit) {
+                await updateHabit(editingHabit, habitData);
+            } else {
+                await createHabit(habitData);
+            }
+            
+            await refreshHabits();
             closeModal();
         } catch (error) {
             console.error('Error al guardar hábito:', error);
@@ -270,8 +265,6 @@ export default function HabitsView() {
         setNewHabit({ ...newHabit, tareas: newTareas });
     };
 
-    // Encontrar la categoría seleccionada para mostrar su ícono y color
-    const selectedCategory = categories.find(cat => cat.name === newHabit.categoria);
 
     if (loading) {
         return (
@@ -318,24 +311,31 @@ export default function HabitsView() {
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         {habits.map(habit => {
                             const completadas = habit.tareas.filter(t => t.completado).length;
-                            const progreso = Math.round((completadas / habit.tareas.length) * 100);
-                            const habitCategory = categories.find(cat => cat.name === habit.categoria);
+                            const total = habit.tareas.length;
+                            const progreso = total > 0 ? Math.round((completadas / total) * 100) : 0;
+                            
+                            // AHORA accedemos al objeto habit.categoria directamente
+                            // Se usa optional chaining (?.) por si la categoría fue borrada
+                            const catColor = habit.categoria?.color || '#ccc';
+                            const catIcon = habit.categoria?.icon || '❓';
+                            const catName = habit.categoria?.name || 'Sin categoría';
 
                             return (
                                 <div key={habit._id} className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="flex-1 flex items-center gap-3">
-                                            {habitCategory && (
-                                                <div
-                                                    className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-md flex-shrink-0"
-                                                    style={{ backgroundColor: habitCategory.color }}
-                                                >
-                                                    {habitCategory.icon}
-                                                </div>
-                                            )}
+                                        {/* Icono de Categoría */}
+                                            <div
+                                                className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-md flex-shrink-0"
+                                                style={{ backgroundColor: catColor }}
+                                            >
+                                                {catIcon}
+                                            </div>
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="text-2xl font-bold text-gray-800">{habit.categoria}</h3>
-                                                <p className="text-sm text-gray-600">{habit.nombre}</p>
+                                                <h3 className="text-2xl font-bold text-gray-800 truncate" title={catName}>
+                                                    {catName}
+                                                </h3>
+                                                <p className="text-sm text-gray-600 truncate">{habit.nombre}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
@@ -444,9 +444,9 @@ export default function HabitsView() {
                                             <button
                                                 key={category._id}
                                                 type="button"
-                                                onClick={() => setNewHabit({ ...newHabit, categoria: category.name })}
+                                                onClick={() => setNewHabit({ ...newHabit, categoria: category._id })}
                                                 className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
-                                                    newHabit.categoria === category.name
+                                                    newHabit.categoria === category._id
                                                         ? 'bg-orange-100 ring-2 ring-orange-400 shadow-md'
                                                         : 'bg-white hover:bg-orange-50'
                                                 }`}
@@ -464,7 +464,7 @@ export default function HabitsView() {
                                                         <p className="text-xs text-gray-500 line-clamp-1">{category.description}</p>
                                                     )}
                                                 </div>
-                                                {newHabit.categoria === category.name && (
+                                                {newHabit.categoria === category._id && (
                                                     <span className="text-orange-500 text-xl">✓</span>
                                                 )}
                                             </button>

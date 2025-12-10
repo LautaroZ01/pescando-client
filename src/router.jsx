@@ -16,6 +16,7 @@ import Dashboard from "./views/habits/Dashboard";
 import HabitsView from "./views/habits/HabitsView";
 import IndexView from "./views/home/IndexView";
 import CategoryView from "./views/category/CategoryView";
+import ProgressView from "./views/progress/ProgressView";
 
 export default function Router() {
     return (
@@ -24,7 +25,6 @@ export default function Router() {
                 {/* Landing pública */}
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<IndexView />} />
-                    <Route path="/profile" element={<ProfileView />} />
                     <Route index element={<IndexHomeView />} />
                 </Route>
 
@@ -46,6 +46,11 @@ export default function Router() {
                         <Route path="habits" element={<HabitsView />} />
                         <Route path="category" element={<CategoryView />} />
                     </Route>
+                    <Route element={<DashboardLayout />}>
+                        <Route path="/profile" element={<ProfileView />} />
+                        <Route path="/progress" element={<ProgressView />} />   
+                    </Route>
+
                 </Route>
 
                 {/* 404 */}

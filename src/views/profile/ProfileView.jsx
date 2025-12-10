@@ -6,9 +6,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import ErrorMessage from '../../components/ui/ErrorMessage';
 import ProfileIcon from '../../components/ui/ProfileIcon';
-import HabitsCharts from './HabitsChart';
 import { getStats } from '../../API/HabitAPI';
-import CategoryPieChart from './CategoryPieChart';
+import StreakChart from './StreakChart';
 
 
 export default function ProfileView() {
@@ -137,7 +136,7 @@ export default function ProfileView() {
                         <p className='text-gray-600'>{userData.email}</p>
                     </div>
 
-                    <div className='flex gap-2 justify-center'>     {['perfil', 'gráficas', 'hábitos'].map(tab => (
+                    <div className='flex gap-2 justify-center'>     {['perfil', 'logros', 'hábitos'].map(tab => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
@@ -202,33 +201,15 @@ export default function ProfileView() {
                         </form>
                     )}
 
-                    {activeTab === 'gráficas' && (
+                    {activeTab === 'logros' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            
-                            {/* --- Sección de Tarjetas de Métricas  --- */}
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                                <div className="bg-gradient-to-br from-orange-100 to-white p-6 rounded-2xl shadow-sm">
-                                    <p className="text-gray-500 text-sm font-medium">Total de Hábitos</p>
-                                    <p className="text-3xl font-bold text-orange-600">
-                                        {stats ? stats.totalHabits : '-'}
-                                    </p>
-                                </div>
-                                
+                            <div className="text-center mb-8">
+                                <h3 className="text-2xl font-bold text-gray-800">Mis Trofeos</h3>
+                                <p className="text-gray-500 mt-2">Mantén la constancia para liderar el ranking.</p>
                             </div>
-
-                            {/* --- Sección de Gráficas --- */}
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                
-                                {/* Gráfica de Barras (Izquierda) */}
-                                <HabitsCharts />
-
-                                {/* Gráfica de Pastel (Derecha) */}
-                                <CategoryPieChart />
-                                
-                            </div>
+                            <StreakChart />           
                         </div>
                     )}
-
                 </div>
 
 

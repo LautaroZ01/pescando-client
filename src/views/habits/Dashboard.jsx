@@ -173,7 +173,7 @@ export default function Dashboard() {
                                                     {habit.nombre}
                                                 </p>
                                                 <p className="text-sm text-gray-500">
-                                                    {habit.categoria}
+                                                    {habit.categoria.name}
                                                 </p>
                                             </div>
                                         </div>
