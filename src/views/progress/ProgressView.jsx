@@ -4,14 +4,23 @@ import HabitsCharts from "./HabitsChart";
 import PerformanceRadar from "./PerformanceRadar"
 import { IoIosStats, IoMdCheckmarkCircle, IoMdFlame, IoMdTrophy } from "react-icons/io";
 import StatCard from "../../components/ui/StatCard";
-import { getStats } from "../../API/HabitAPI";
+import { getHistoryStats, getStats } from "../../API/HabitAPI";
+import WeeklyProgressChart from "./WeeklyProgressChart";
 
 export default function ProgressView() {
 
     const [stats, setStats] = useState(null)
-
+    const [weeklyData, setWeeklyData] = useState([])
+    const [loadingHistory, setLoadingHistory] = useState(null)
+ 
     useEffect(()=>{
         getStats().then(setStats).catch(console.error)
+        getHistoryStats()
+            .then(data => {
+                setWeeklyData(data.weeklyData); // Guardamos la data semanal
+            })
+            .catch(console.error)
+            .finally(() => setLoadingHistory(false))
     }, [])
 
     return (
@@ -55,11 +64,17 @@ export default function ProgressView() {
                     />
                 </div>
 
+                
+
                 {/* Gráficos principales */}
-                <div className="space-y-8 m-3">
-                    
+                <div className="space-y-8 mt-4 w-full">
+
+                    <div>
+                        <WeeklyProgressChart data={weeklyData} loading={loadingHistory} />
+                    </div> 
+
                     {/* Fila Superior: Rendimiento Diario (Ancho Completo) */}
-                    <div className="w-full">
+                    <div>
                         <HabitsCharts />
                     </div>
 

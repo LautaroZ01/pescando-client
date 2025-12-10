@@ -142,3 +142,13 @@ export const getCategoryPerformance = async () => {
         throw error;
     }
 }
+
+export const getHistoryStats = async () => {
+    try {
+        const { data } = await api.get('/habits/history-stats');
+        return data; 
+    } catch (error) {
+        console.error('Error obteniendo historial:', error);
+        throw error;
+    }
+};
