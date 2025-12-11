@@ -340,7 +340,7 @@ export default function HabitsView() {
                             ¡{filter === 'completed'
                                 ? 'No tienes hábitos completados hoy!'
                                 : filter === 'pending'
-                                    ? '¡Estás al día! No hay pendientes'
+                                    ? 'Estás al día! No hay pendientes'
                                     : '¡Comienza a pescar hábitos!'}
                         </p>
                         <p className="text-gray-600 mb-6">
