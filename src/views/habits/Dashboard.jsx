@@ -56,7 +56,7 @@ export default function Dashboard() {
     const safeProgress = Math.max(0, Math.min(100, stats.progressToday || 0));
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-pink-100 via-orange-100 to-orange-200">
+        <div className="min-h-screen bg-gradient-to-br from-pink-100 via-orange-100 to-orange-200 p-6">
             <div className="max-w-5xl mx-auto px-4 py-8">
                 {error && (
                     <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl mb-4">

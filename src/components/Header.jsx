@@ -19,7 +19,7 @@ export default function Header() {
 
     return (
         <header className='px-10'>
-            <div className={`flex items-center justify-between container mx-auto p-2 top-4 lg:px-8 z-50 ${location.pathname === '/' ? 'fixed inset-x-0' : 'sticky'} backdrop-blur-md bg-white/20 rounded-full`}>
+            <div className={`flex items-center justify-between container mx-auto p-2 top-4 lg:px-8 z-50 ${(location.pathname === '/' || location.pathname === '/community') ? 'fixed inset-x-0' : 'sticky'} backdrop-blur-md bg-white/20 rounded-full`}>
                 <Link to="/">
                     🎣
                 </Link>
