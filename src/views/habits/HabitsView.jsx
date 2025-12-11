@@ -455,7 +455,7 @@ export default function HabitsView() {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+                    <div className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
                         <h2 className="text-3xl font-bold text-gray-800 mb-6">
                             {editingHabit ? 'Editar hábito' : 'Nuevo hábito'}
                         </h2>

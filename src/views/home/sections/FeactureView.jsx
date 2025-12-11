@@ -46,7 +46,7 @@ export default function FeactureView() {
                             Únete gratis para sincronizar tus hábitos en la nube y acceder desde cualquier dispositivo.
                         </p>
 
-                        <Link className="btn-primary px-6 py-2.5 rounded-full text-sm font-medium flex items-center gap-2 mt-12 hover:shadow-lg transition-all duration-pro">
+                        <Link to="/auth/register" className="btn-primary px-6 py-2.5 rounded-full text-sm font-medium flex items-center gap-2 mt-12 hover:shadow-lg transition-all duration-pro">
                             Crear cuenta gratis
                             <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
                         </Link>

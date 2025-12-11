@@ -5,7 +5,7 @@ export default function GenerateRoutine() {
     return (
         <Link
             to={location.pathname + '?isOpen=true'}
-            className="absolute bottom-4 right-4 flex items-center rounded-full p-3 shadow-lg group transition-all duration-300 hover:pr-5 bg-white cursor-pointer"
+            className="absolute bottom-8 right-12 flex items-center rounded-full p-3 shadow-lg group transition-all duration-300 hover:pr-5 bg-white cursor-pointer"
         >
             <div className="relative flex items-center justify-center">
                 <BsStars className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400" style={{ fill: "url(#gradient)" }} />
