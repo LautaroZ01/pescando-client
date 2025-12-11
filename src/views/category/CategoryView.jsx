@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Trash2, Edit2, Plus, X, Check, AlertCircle, Loader2 } from 'lucide-react';
+import ConfirmationModal from '../../components/ConfirmationModal';
 
 // Configuración de la API
 const API_BASE_URL = 'http://localhost:3000/api';
@@ -28,6 +29,8 @@ export default function HabitCategoriesApp() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -135,14 +138,16 @@ export default function HabitCategoriesApp() {
       setSaving(false);
     }
   };
-
-  const handleDelete = async (id, name) => {
-    if (!window.confirm(`¿Estás seguro de que deseas eliminar la categoría "${name}"?`)) {
-      return;
+  const onRequestDelete = (id, name) => {
+      setCategoryToDelete({ id, name });
+      setIsDeleteModalOpen(true);
     }
 
+  const handleConfirmDelete = async () => {
+    if (!categoryToDelete) return;
+
     try {
-      const response = await fetch(`${API_BASE_URL}/category/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/category/${categoryToDelete.id}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: { 'Accept': 'application/json' }
@@ -159,8 +164,12 @@ export default function HabitCategoriesApp() {
     } catch (err) {
       setError(err.message);
       setTimeout(() => setError(null), 3000);
+    } finally {
+      
+      setIsDeleteModalOpen(false);
+      setCategoryToDelete(null);
     }
-  };
+  }
 
   const handleCreate = () => {
     setEditingCategory(null);
@@ -279,23 +288,26 @@ export default function HabitCategoriesApp() {
                     </div>
                   </div>
                 </div>
+                
+                {category.user && (
+                  <div className="flex gap-2 mt-4">
+                    <button
+                      onClick={() => handleEdit(category)}
+                      className="flex-1 py-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-colors flex items-center justify-center gap-2 font-medium"
+                    >
+                      <Edit2 size={16} />
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => onRequestDelete(category._id, category.name)}
+                      className="flex-1 py-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-colors flex items-center justify-center gap-2 font-medium"
+                    >
+                      <Trash2 size={16} />
+                      Eliminar
+                    </button>
+                  </div>
 
-                <div className="flex gap-2 mt-4">
-                  <button
-                    onClick={() => handleEdit(category)}
-                    className="flex-1 py-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-colors flex items-center justify-center gap-2 font-medium"
-                  >
-                    <Edit2 size={16} />
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => handleDelete(category._id, category.name)}
-                    className="flex-1 py-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-colors flex items-center justify-center gap-2 font-medium"
-                  >
-                    <Trash2 size={16} />
-                    Eliminar
-                  </button>
-                </div>
+                )}
               </div>
             ))}
           </div>
@@ -462,6 +474,18 @@ export default function HabitCategoriesApp() {
           </div>
         )}
       </div>
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar Categoría"
+        message={`¿Estás seguro de que deseas eliminar la categoría "${categoryToDelete?.name}"? Esta acción no se puede deshacer.`}
+        confirmText="Sí, eliminar"
+        cancelText="Cancelar"
+        type="danger"
+      />
     </div>
+
+    
   );
 }

@@ -30,8 +30,6 @@ export default function Router() {
                     <Route path="/community" element={<CommunityView />} />
                 </Route>
 
-                {/* COMUNIDAD PÚBLICA - Sin layout, accesible para todos */}
-
                 {/* Auth */}
                 <Route path="/auth" element={<AuthLayout />}>
                     <Route path="login" element={<LoginView />} />

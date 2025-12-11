@@ -45,7 +45,7 @@ export default function ProgressView() {
     }
 
     return (
-        <div className="w-full min-h-full bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50 p-6 lg:p-8 rounded-3xl">
+        <div className="w-full lg:p-8 rounded-3xl min-h-screen bg-gradient-to-br from-pink-100 via-orange-100 to-orange-200 p-6">
             <div className="max-w-7xl mx-auto space-y-8">
                 <div>
                     <h1 className="text-4xl font-bold text-gray-800">Mi Progreso</h1>
