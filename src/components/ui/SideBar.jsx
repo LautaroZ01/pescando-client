@@ -18,7 +18,8 @@ export default function SideBar() {
         { to: '/dashboard/habits', label: 'Hábitos', icon: <FaUser /> },
         { to: '/community', label: 'Comunidad', icon: <GiBoatFishing /> },
         { to: '/dashboard/category', label: 'Categorías', icon: <FaTag /> },
-        { to: '/progress', label: 'Progreso', icon: <ImStatsBars /> }
+        { to: '/progress', label: 'Progreso', icon: <ImStatsBars /> },
+        { to: '/pomodoro', label: 'Pomodoro', icon: <FaFish /> }
     ];
 
 

@@ -17,6 +17,7 @@ import HabitsView from "./views/habits/HabitsView";
 import IndexView from "./views/home/IndexView";
 import CategoryView from "./views/category/CategoryView";
 import ProgressView from "./views/progress/ProgressView";
+import PomodoroView from "./views/pomodoro/PomodoroView";
 
 export default function Router() {
     return (
@@ -45,10 +46,12 @@ export default function Router() {
                         <Route index element={<Dashboard />} />
                         <Route path="habits" element={<HabitsView />} />
                         <Route path="category" element={<CategoryView />} />
+
                     </Route>
                     <Route element={<DashboardLayout />}>
+                        <Route path="pomodoro" element={<PomodoroView />} />
                         <Route path="/profile" element={<ProfileView />} />
-                        <Route path="/progress" element={<ProgressView />} />   
+                        <Route path="/progress" element={<ProgressView />} />
                     </Route>
 
                 </Route>
