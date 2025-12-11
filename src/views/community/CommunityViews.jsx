@@ -5,12 +5,13 @@ import { getHabits } from '../../API/HabitAPI';
 import { useAuth } from '../../hooks/useAuth';
 import { getCategories } from '../../API/CategoryAPI';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2 } from 'lucide-react'; 
+import { Loader2 } from 'lucide-react';
 import { FaHeart, FaRegHeart, FaThumbsUp, FaRegThumbsUp, FaStar, FaRegStar } from "react-icons/fa";
+import ProfileIcon from '../../components/ui/ProfileIcon';
 
 export default function CommunityView() {
     const navigate = useNavigate();
-    
+
     // Auth Data
     const { data: userData, isError, isLoading: authLoading } = useAuth(); // Agregamos authLoading
     const isAuthenticated = !isError && userData;
@@ -19,7 +20,7 @@ export default function CommunityView() {
     const [habits, setHabits] = useState([]);
     const [myHabits, setMyHabits] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     // Filtros
     const [selectedCategory, setSelectedCategory] = useState('Todos');
     const [sortBy, setSortBy] = useState('recent');
@@ -28,17 +29,17 @@ export default function CommunityView() {
     const [showShareModal, setShowShareModal] = useState(false);
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [authMessage, setAuthMessage] = useState('');
-    
+
     // Modal Copiar
     const [copyModal, setCopyModal] = useState({ isOpen: false, habitId: null, habitName: '' });
     const [copying, setCopying] = useState(false);
 
     // Modal Mensajes (Éxito/Error)
-    const [messageModal, setMessageModal] = useState({ 
-        isOpen: false, 
-        type: 'success', 
-        title: '', 
-        message: '' 
+    const [messageModal, setMessageModal] = useState({
+        isOpen: false,
+        type: 'success',
+        title: '',
+        message: ''
     });
 
     // --- CORRECCIÓN 3: LIKES AL RECARGAR ---
@@ -48,7 +49,7 @@ export default function CommunityView() {
         if (!authLoading) {
             fetchHabits();
         }
-    }, [selectedCategory, sortBy, userData, authLoading]); 
+    }, [selectedCategory, sortBy, userData, authLoading]);
 
     const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
         queryKey: ['categories'],
@@ -63,7 +64,7 @@ export default function CommunityView() {
                 params.categoria = selectedCategory;
             }
             // Si el usuario existe, enviamos su ID para que el backend sepa qué likes pintarle
-            if (userData?._id) { 
+            if (userData?._id) {
                 params.userId = userData._id;
             }
             const data = await getCommunityHabits(params);
@@ -89,7 +90,7 @@ export default function CommunityView() {
                 });
             case 'recent':
             default:
-                return sorted; 
+                return sorted;
         }
     }, [habits, sortBy]);
 
@@ -118,8 +119,8 @@ export default function CommunityView() {
         // Forzamos la actualización del 'userRating' en el estado local
         setHabits(currentHabits => currentHabits.map(habit => {
             if (habit._id === habitId) {
-                return { 
-                    ...habit, 
+                return {
+                    ...habit,
                     userRating: stars // Esto asegura que la estrella se pinte inmediatamente
                 };
             }
@@ -185,20 +186,20 @@ export default function CommunityView() {
         try {
             await shareMyHabit(habitId);
             setShowShareModal(false); // Cerramos lista
-            
+
             setMessageModal({
                 isOpen: true,
                 type: 'success',
                 title: '¡Publicado!',
                 message: 'Tu hábito ha sido publicado en la comunidad exitosamente.'
             });
-            
+
             fetchHabits();
         } catch (error) {
             console.error('Error al compartir:', error);
-            
+
             // PRIMERO cerramos el modal de selección para que no tape al de error
-            setShowShareModal(false); 
+            setShowShareModal(false);
 
             // LUEGO abrimos el modal de error
             setMessageModal({
@@ -230,7 +231,7 @@ export default function CommunityView() {
                 title: '¡Copiado!',
                 message: 'El hábito se ha añadido correctamente a tu lista personal.'
             });
-            fetchHabits(); 
+            fetchHabits();
         } catch (error) {
             console.error('Error al copiar:', error);
             // Cerramos modal de copiado por si acaso
@@ -266,8 +267,8 @@ export default function CommunityView() {
                         // 1. Si hay hover, usa hover.
                         // 2. Si no, si hay voto del usuario (>0), usa el voto del usuario.
                         // 3. Si no, usa el promedio general.
-                        const ratingToShow = hoveredStar > 0 
-                            ? hoveredStar 
+                        const ratingToShow = hoveredStar > 0
+                            ? hoveredStar
                             : (userRating > 0 ? userRating : Math.round(currentRating));
 
                         const isFilled = star <= ratingToShow;
@@ -300,7 +301,7 @@ export default function CommunityView() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-orange-200 via-rose-200 to-pink-200 pt-28">
             <div className="max-w-7xl mx-auto px-4 py-8">
-                
+
                 {/* Título */}
                 <div className="text-center mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                     <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3 tracking-tight">
@@ -315,36 +316,36 @@ export default function CommunityView() {
                 <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-6 mb-8">
                     <div className="flex flex-wrap gap-2 mb-4">
                         {categoriesLoading ? (
-                             <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2">
                                 <span className="animate-pulse">Cargando categorías...</span>
-                                <span className="animate-spin"><Loader2 size={16}/></span>
+                                <span className="animate-spin"><Loader2 size={16} /></span>
                             </div>
                         ) : (
                             <>
-                            <button
-                                onClick={() => setSelectedCategory('Todos')}
-                                className={`px-4 py-2 rounded-full font-medium transition-all ${selectedCategory === 'Todos'
-                                    ? 'bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-md' // Estilo Activo
-                                    : 'bg-white text-gray-700 hover:bg-gray-100' // Estilo Inactivo
-                                    }`}
-                            >
-                                Todos
-                            </button>
-
-                            {categoriesData.map((cat, index) => (
                                 <button
-                                    key={index}
-                                    onClick={() => setSelectedCategory(cat.name)}
-                                    className={`px-4 py-2 rounded-full font-medium transition-all ${selectedCategory === cat.name ? 'bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+                                    onClick={() => setSelectedCategory('Todos')}
+                                    className={`px-4 py-2 rounded-full font-medium transition-all ${selectedCategory === 'Todos'
+                                        ? 'bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-md' // Estilo Activo
+                                        : 'bg-white text-gray-700 hover:bg-gray-100' // Estilo Inactivo
+                                        }`}
                                 >
-                                    {cat.name}
+                                    Todos
                                 </button>
-                            ))}
+
+                                {categoriesData.map((cat, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedCategory(cat.name)}
+                                        className={`px-4 py-2 rounded-full font-medium transition-all ${selectedCategory === cat.name ? 'bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+                                    >
+                                        {cat.name}
+                                    </button>
+                                ))}
                             </>
                         )}
                     </div>
                     <div className="flex flex-wrap gap-3 items-center justify-between">
-                         <div className="flex gap-2">
+                        <div className="flex gap-2">
                             <button onClick={() => setSortBy('recent')} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${sortBy === 'recent' ? 'bg-purple-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100'}`}>🕒 Recientes</button>
                             <button onClick={() => setSortBy('rating')} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${sortBy === 'rating' ? 'bg-purple-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100'}`}>⭐ Mejor valorados</button>
                             <button onClick={() => setSortBy('popular')} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${sortBy === 'popular' ? 'bg-purple-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100'}`}>🔥 Populares</button>
@@ -366,7 +367,7 @@ export default function CommunityView() {
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
                         <div className="text-2xl font-bold text-orange-500 flex gap-2 items-center">
-                            <Loader2 className="animate-spin" size={32}/> Cargando...
+                            <Loader2 className="animate-spin" size={32} /> Cargando...
                         </div>
                     </div>
                 ) : (
@@ -384,12 +385,12 @@ export default function CommunityView() {
                                     </div>
                                     <h3 className="text-lg font-bold text-gray-800 mb-2 truncate" title={habit.nombre}>{habit.nombre}</h3>
                                     {habit.descripcion && <p className="text-gray-600 text-sm mb-3 line-clamp-2 min-h-[40px]">{habit.descripcion}</p>}
-                                    
+
                                     <div className="mb-4">
                                         <StarRating habitId={habit._id} currentRating={habit.averageRating} userRating={habit.userRating} />
                                         <span className="text-xs text-gray-500 mt-1 block pl-1">{habit.totalRatings} valoraciones</span>
                                     </div>
-                                    
+
                                     <div className="flex gap-4 mb-4 pt-2 border-t border-gray-100">
                                         <button onClick={() => handleReaction(habit._id, 'heart')} className="flex items-center gap-2 group transition-transform active:scale-95">
                                             {habit.userHasHearted ? (
@@ -408,11 +409,15 @@ export default function CommunityView() {
                                             <span className={`text-sm font-medium ${habit.userHasLiked ? 'text-blue-500' : 'text-gray-500'}`}>{habit.reactionsCount?.likes || 0}</span>
                                         </button>
                                     </div>
-                                    
+
                                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-sm">
-                                                <span className="text-white text-xs font-bold">{habit.userName?.charAt(0).toUpperCase() || '?'}</span>
+                                            <div className="bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center shadow-sm">
+                                                {habit.userId.photo ? (
+                                                    <ProfileIcon src={habit.userId.photo} alt="Avatar" size="sm" />
+                                                ) : (
+                                                    <span className="text-white text-xs font-bold">{habit.userName?.charAt(0).toUpperCase() || '?'}</span>
+                                                )}
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-xs text-gray-700 font-bold leading-tight">{habit.userName || 'Anónimo'}</span>
@@ -462,13 +467,12 @@ export default function CommunityView() {
                             {messageModal.title}
                         </h2>
                         <p className="text-gray-600 mb-8 text-lg">{messageModal.message}</p>
-                        <button 
+                        <button
                             onClick={() => setMessageModal({ ...messageModal, isOpen: false })}
-                            className={`w-full px-6 py-3 rounded-full font-bold shadow-md transition-all hover:scale-105 text-white ${
-                                messageModal.type === 'success' 
-                                    ? 'bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600' 
-                                    : 'bg-gradient-to-r from-red-400 to-orange-500 hover:from-red-500 hover:to-orange-600'
-                            }`}
+                            className={`w-full px-6 py-3 rounded-full font-bold shadow-md transition-all hover:scale-105 text-white ${messageModal.type === 'success'
+                                ? 'bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600'
+                                : 'bg-gradient-to-r from-red-400 to-orange-500 hover:from-red-500 hover:to-orange-600'
+                                }`}
                         >
                             Entendido
                         </button>
@@ -497,7 +501,7 @@ export default function CommunityView() {
                     <div className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto">
                         <h2 className="text-3xl font-bold text-gray-800 mb-2">Compartir a la comunidad</h2>
                         <p className="text-gray-500 mb-6">Elige cuál de tus hábitos quieres hacer público.</p>
-                        
+
                         {myHabits.length === 0 ? (
                             <div className="text-center py-8">
                                 <p className="text-gray-600 mb-4">No tienes hábitos creados.</p>

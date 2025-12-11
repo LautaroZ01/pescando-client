@@ -6,6 +6,7 @@ export async function getCommunityHabits(params = {}) {
         const queryString = new URLSearchParams(params).toString();
         const url = `/community${queryString ? `?${queryString}` : ''}`;
         const { data } = await api.get(url);
+        console.log(data);
         return data;
     } catch (error) {
         // Si no está autenticado, intentar obtener los datos públicamente

@@ -2,14 +2,15 @@ import { FaRegUser } from "react-icons/fa"
 
 const SIZE_MAP = {
     md: "w-12 h-12",
-    xl: "w-32 h-32"
+    xl: "w-32 h-32",
+    sm: "w-8 h-8"
 }
 
 export default function ProfileIcon({
-    src, 
-    alt="Avatar",
+    src,
+    alt = "Avatar",
     size = "xl",
-    className = ""}) {
+    className = "" }) {
 
 
     const sizeClasses = SIZE_MAP[size] || SIZE_MAP['sm']
@@ -19,10 +20,10 @@ export default function ProfileIcon({
     if (src) {
         return (
             <div className={baseClasses}>
-                <img 
-                    src={src} 
-                    alt={alt} 
-                    className="w-full h-full object-cover" 
+                <img
+                    src={src}
+                    alt={alt}
+                    className="w-full h-full object-cover"
                 />
             </div>
         );
