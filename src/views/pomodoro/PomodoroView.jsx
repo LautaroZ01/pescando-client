@@ -65,7 +65,7 @@ export default function SideBar() {
     const goal = settings.dailyGoal || 8;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-pink-100 via-orange-100 to-orange-200">
+        <div className="min-h-screen bg-gradient-to-br mt-4 from-pink-100 via-orange-100 to-orange-200">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-6 mb-6">
@@ -92,8 +92,8 @@ export default function SideBar() {
                 {showSettings && (
                     <div
                         className={`bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-6 mb-6 transform transition-all duration-300 origin-top ${closingSettings
-                                ? 'opacity-0 -translate-y-2 scale-95'
-                                : 'opacity-100 translate-y-0 scale-100'
+                            ? 'opacity-0 -translate-y-2 scale-95'
+                            : 'opacity-100 translate-y-0 scale-100'
                             }`}
                     >
                         <h2 className="text-xl font-bold text-gray-800 mb-4">
@@ -180,8 +180,8 @@ export default function SideBar() {
                             onClick={() => !isActive && switchMode('pomodoro')}
                             disabled={isActive}
                             className={`px-3 py-2 rounded-full font-medium transition-all text-sm md:text-base ${mode === 'pomodoro'
-                                    ? 'bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-md'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-md'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 } ${isActive ? 'cursor-not-allowed opacity-80' : ''}`}
                         >
                             Pomodoro
@@ -190,8 +190,8 @@ export default function SideBar() {
                             onClick={() => !isActive && switchMode('shortBreak')}
                             disabled={isActive}
                             className={`px-3 py-2 rounded-full font-medium transition-all text-sm md:text-base ${mode === 'shortBreak'
-                                    ? 'bg-gradient-to-r from-green-400 to-emerald-400 text-white shadow-md'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-gradient-to-r from-green-400 to-emerald-400 text-white shadow-md'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 } ${isActive ? 'cursor-not-allowed opacity-80' : ''}`}
                         >
                             Descanso
@@ -200,8 +200,8 @@ export default function SideBar() {
                             onClick={() => !isActive && switchMode('longBreak')}
                             disabled={isActive}
                             className={`px-3 py-2 rounded-full font-medium transition-all text-sm md:text-base ${mode === 'longBreak'
-                                    ? 'bg-gradient-to-r from-blue-400 to-indigo-400 text-white shadow-md'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-gradient-to-r from-blue-400 to-indigo-400 text-white shadow-md'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 } ${isActive ? 'cursor-not-allowed opacity-80' : ''}`}
                         >
                             Descanso L.
