@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 export default function CTAView() {
     return (
-        <section className="py-40 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-pink-500 to-orange-500">
+        <section id="cta" className="py-40 px-4 sm:px-6 lg:px-8 bg-linear-to-r from-pink-500 to-orange-500">
             <div className="max-w-4xl mx-auto text-center text-white">
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
                     ¿Listo para construir tu mejor versión?

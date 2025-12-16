@@ -7,7 +7,7 @@ export default function Footer() {
                 <div className="grid md:grid-cols-4 gap-8 mb-20">
                     <div>
                         <h4 className="text-white font-bold mb-4 flex items-center space-x-2">
-                            <span>🎣</span>
+                            <img src="/pezicon.png" alt="Pescando Icono" className='size-8' />
                             <span>Pescando</span>
                         </h4>
                         <ul className="space-y-2">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getCurrentUser } from '../../API/AuthAPI';
+import Loader from '../../components/ui/Loader';
 
 export default function HabitsView() {
     // Estado para el usuario
@@ -103,17 +104,13 @@ export default function HabitsView() {
 
     // Mostrar loading mientras se carga el usuario
     if (loading) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50 flex items-center justify-center">
-                <div className="text-2xl font-bold text-orange-500">Cargando...</div>
-            </div>
-        );
+        return <Loader />;
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50">
+        <div className="min-h-screen bg-linear-to-br from-orange-50 via-pink-50 to-rose-50">
             {/* Sidebar */}
-            <div className="fixed left-0 top-0 h-full w-20 bg-gradient-to-b from-orange-200 via-rose-200 to-red-200 shadow-lg flex flex-col items-center py-8 gap-6">
+            <div className="fixed left-0 top-0 h-full w-20 bg-linear-to-b from-orange-200 via-rose-200 to-red-200 shadow-lg flex flex-col items-center py-8 gap-6">
                 <div className="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-110 transition">
                     <span className="text-2xl">❤️</span>
                 </div>
@@ -135,11 +132,11 @@ export default function HabitsView() {
                     <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-3">
                             <span className="text-4xl">🎣</span>
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+                            <h1 className="text-3xl font-bold bg-linear-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
                                 Pescando
                             </h1>
                         </div>
-                        <div className="bg-gradient-to-r from-orange-400 to-red-400 text-white px-6 py-3 rounded-full shadow-md flex items-center gap-2">
+                        <div className="bg-linear-to-r from-orange-400 to-red-400 text-white px-6 py-3 rounded-full shadow-md flex items-center gap-2">
                             <span className="text-xl">🔥</span>
                             <span className="font-bold">{diasConsecutivos} días</span>
                         </div>
@@ -150,7 +147,7 @@ export default function HabitsView() {
                 <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg p-8 mb-8">
                     <h2 className="text-3xl font-bold mb-4">
                         <span className="text-orange-500">¡Bienvenido, </span>
-                        <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                        <span className="bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
                             {user?.nombre || user?.username || user?.email?.split('@')[0] || 'Usuario'}!
                         </span>
                     </h2>
@@ -160,7 +157,7 @@ export default function HabitsView() {
                         <p className="text-4xl font-bold text-gray-800 mb-3">{progresoDia}%</p>
                         <div className="w-full bg-gray-300 rounded-full h-4 overflow-hidden shadow-inner">
                             <div
-                                className="h-full bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-full transition-all duration-500"
+                                className="h-full bg-linear-to-r from-orange-500 via-red-500 to-pink-500 rounded-full transition-all duration-500"
                                 style={{ width: `${progresoDia}%` }}
                             />
                         </div>
@@ -183,7 +180,7 @@ export default function HabitsView() {
                     <h2 className="text-3xl font-bold text-gray-800">Hábitos de hoy</h2>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-6 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105"
+                        className="bg-linear-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white px-6 py-3 rounded-full shadow-md font-medium transition-all hover:scale-105"
                     >
                         Agregar
                     </button>
@@ -200,7 +197,7 @@ export default function HabitsView() {
 
                                 <div className="w-full bg-gray-300 rounded-full h-3 mb-6 overflow-hidden shadow-inner">
                                     <div
-                                        className="h-full bg-gradient-to-r from-orange-500 to-red-500 rounded-full transition-all duration-300"
+                                        className="h-full bg-linear-to-r from-orange-500 to-red-500 rounded-full transition-all duration-300"
                                         style={{ width: `${progreso}%` }}
                                     />
                                 </div>
@@ -213,8 +210,8 @@ export default function HabitsView() {
                                             className="flex items-center gap-3 cursor-pointer hover:bg-white/50 p-2 rounded-lg transition"
                                         >
                                             <div className={`w-6 h-6 rounded-md flex items-center justify-center ${tarea.completado
-                                                    ? 'bg-green-500'
-                                                    : 'bg-red-800'
+                                                ? 'bg-green-500'
+                                                : 'bg-red-800'
                                                 }`}>
                                                 {tarea.completado && <span className="text-white text-sm">✓</span>}
                                             </div>
@@ -233,7 +230,7 @@ export default function HabitsView() {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4">
+                    <div className="bg-linear-to-br from-white to-orange-50 rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4">
                         <h2 className="text-3xl font-bold text-gray-800 mb-6">Nuevo hábito</h2>
                         <form onSubmit={agregarHabito}>
                             <div className="mb-6">
@@ -266,7 +263,7 @@ export default function HabitsView() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-6 py-3 rounded-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white font-medium shadow-md transition-all hover:scale-105"
+                                    className="flex-1 px-6 py-3 rounded-full bg-linear-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white font-medium shadow-md transition-all hover:scale-105"
                                 >
                                     Crear
                                 </button>
