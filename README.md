@@ -33,14 +33,15 @@ El enfoque está puesto en una **experiencia clara, moderna y motivadora**.
 ---
 
 ## 📁 Estructura del Proyecto
+```
 client/
 ├── public/
 ├── src/
-│   ├── assets/        # Imágenes, íconos, logos
+│   ├── assets/        # Imágenes, íconos y logos
 │   ├── components/    # Componentes reutilizables
 │   ├── hooks/         # Custom hooks
 │   ├── layouts/       # Layouts principales
-│   ├── pages/         # Vistas / pantallas
+│   ├── pages/         # Vistas y pantallas
 │   ├── services/      # Lógica de conexión con la API
 │   ├── styles/        # Estilos globales
 │   ├── App.jsx
@@ -49,6 +50,7 @@ client/
 ├── index.html
 └── package.json
 
+```
 
 ## 🚀 Instalación y Uso
 
