@@ -38,6 +38,7 @@
     font-family: "MuseoModerno", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
+    scroll-behavior: smooth;
 }
 
 ::selection {
@@ -51,7 +52,7 @@
 }
 
 .text-style {
-    @apply bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent;
+    @apply bg-linear-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent;
 }
 
 .btn-link {
@@ -59,7 +60,7 @@
 }
 
 .btn-primary {
-    @apply bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full hover:scale-105 transition-transform duration-pro;
+    @apply bg-linear-to-r from-pink-500 to-orange-500 text-white rounded-full hover:scale-105 transition-transform duration-pro;
 }
 
 /* Estilos de formularios */
@@ -76,7 +77,7 @@
     }
 
     button {
-        @apply cursor-pointer w-full px-8 py-2 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full hover:scale-105 transition-transform duration-pro;
+        @apply cursor-pointer w-full px-8 py-2 bg-linear-to-r from-pink-500 to-orange-500 text-white rounded-full hover:scale-105 transition-transform duration-pro;
 
     }
 
@@ -140,30 +141,32 @@
 
 /* Animación para el modal de confirmación */
 @keyframes scale-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .animate-scale-in {
-  animation: scale-in 0.2s ease-out;
+    animation: scale-in 0.2s ease-out;
 }
 
 /* Animación para fade in */
 @keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .animate-fade-in {
-  animation: fade-in 0.3s ease-out;
+    animation: fade-in 0.3s ease-out;
 }

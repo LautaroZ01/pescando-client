@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getHabits, createHabit, toggleTask, deleteTask, deleteHabit, updateHabit } from '../../API/HabitAPI';
-import { getCategories } from '../../API/CategoryAPI';
+import { getCategoriesByUser } from '../../API/CategoryAPI';
 import GenerateRoutine from '../../components/habit/GenerateRoutine';
 import ConfirmationModal from '../../components/ConfirmationModal';
 
@@ -37,7 +37,7 @@ export default function HabitsView() {
 
     const loadCategories = async () => {
         try {
-            const categoriesData = await getCategories();
+            const categoriesData = await getCategoriesByUser();
             setCategories(categoriesData || []);
         } catch (error) {
             console.error('Error cargando categorías:', error);

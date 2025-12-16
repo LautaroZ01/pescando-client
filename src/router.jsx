@@ -9,7 +9,6 @@ import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 import DashboardLayout from "./layouts/DashboardLayout";
 import ProfileView from "./views/profile/ProfileView";
-import IndexHomeView from "./views/home/IndexView";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import CommunityView from "./views/community/CommunityViews";
 import Dashboard from "./views/habits/Dashboard";
@@ -26,7 +25,6 @@ export default function Router() {
                 {/* Landing pública */}
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<IndexView />} />
-                    <Route index element={<IndexHomeView />} />
                     <Route path="/community" element={<CommunityView />} />
                 </Route>
 

@@ -49,7 +49,7 @@ export default function HabitCategoriesApp() {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/category`, {
+      const response = await fetch(`${API_BASE_URL}/category/user`, {
         credentials: 'include',
         headers: { 'Accept': 'application/json' }
       });
@@ -139,9 +139,9 @@ export default function HabitCategoriesApp() {
     }
   };
   const onRequestDelete = (id, name) => {
-      setCategoryToDelete({ id, name });
-      setIsDeleteModalOpen(true);
-    }
+    setCategoryToDelete({ id, name });
+    setIsDeleteModalOpen(true);
+  }
 
   const handleConfirmDelete = async () => {
     if (!categoryToDelete) return;
@@ -165,7 +165,7 @@ export default function HabitCategoriesApp() {
       setError(err.message);
       setTimeout(() => setError(null), 3000);
     } finally {
-      
+
       setIsDeleteModalOpen(false);
       setCategoryToDelete(null);
     }
@@ -288,7 +288,7 @@ export default function HabitCategoriesApp() {
                     </div>
                   </div>
                 </div>
-                
+
                 {category.user && (
                   <div className="flex gap-2 mt-4">
                     <button
@@ -388,8 +388,8 @@ export default function HabitCategoriesApp() {
                       key={colorOption.name}
                       onClick={() => setFormData({ ...formData, color: colorOption.color })}
                       className={`px-4 py-3 rounded-xl text-white font-semibold transition-all bg-gradient-to-r ${colorOption.gradient} ${formData.color === colorOption.color
-                          ? 'ring-4 ring-orange-300 shadow-xl scale-105'
-                          : 'hover:scale-105 shadow-md'
+                        ? 'ring-4 ring-orange-300 shadow-xl scale-105'
+                        : 'hover:scale-105 shadow-md'
                         }`}
                       disabled={saving}
                       type="button"
@@ -411,8 +411,8 @@ export default function HabitCategoriesApp() {
                       key={icon}
                       onClick={() => setFormData({ ...formData, icon })}
                       className={`text-3xl p-3 rounded-lg transition-all hover:scale-110 ${formData.icon === icon
-                          ? 'bg-orange-200 ring-2 ring-orange-400 shadow-lg scale-110'
-                          : 'bg-white hover:bg-orange-50'
+                        ? 'bg-orange-200 ring-2 ring-orange-400 shadow-lg scale-110'
+                        : 'bg-white hover:bg-orange-50'
                         }`}
                       disabled={saving}
                       type="button"
@@ -486,6 +486,6 @@ export default function HabitCategoriesApp() {
       />
     </div>
 
-    
+
   );
 }
