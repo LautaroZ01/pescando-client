@@ -23,33 +23,36 @@ El enfoque está puesto en una **experiencia clara, moderna y motivadora**.
 ## 🧩 Tecnologías Utilizadas
 
 - **React** – Librería principal para la interfaz
-- **Vite** – Entorno de desarrollo rápido
-- **TailwindCSS** – Estilos y diseño UI
-- **React Router** – Navegación entre vistas
-- **Axios / Fetch** – Comunicación con la API
-- **Context / Hooks** – Manejo de estado
-- **Netlify** – Deploy del frontend
+- **Vite** – Entorno de desarrollo de última generación
+- **TailwindCSS** – Framework de estilos y diseño UI
+- **React Router** – Enrutamiento y navegación
+- **TanStack Query** – Gestión de estado asíncrono y caché
+- **Axios** – Cliente HTTP para comunicación con la API
+- **React Hook Form + Zod** – Manejo y validación de formularios
+- **Recharts** – Gráficos y visualización de datos
+- **Vercel AI SDK** – Integración de inteligencia artificial
+- **Lucide React / React Icons** – Colección de íconos
 
 ---
 
 ## 📁 Estructura del Proyecto
-```
+```bash
 client/
-├── public/
+├── public/            # Recursos estáticos (imágenes, logos)
 ├── src/
-│   ├── assets/        # Imágenes, íconos y logos
-│   ├── components/    # Componentes reutilizables
-│   ├── hooks/         # Custom hooks
-│   ├── layouts/       # Layouts principales
-│   ├── pages/         # Vistas y pantallas
-│   ├── services/      # Lógica de conexión con la API
-│   ├── styles/        # Estilos globales
-│   ├── App.jsx
-│   └── main.jsx
-├── .env
-├── index.html
-└── package.json
-
+│   ├── API/           # Funciones de petición al backend (UserAPI, etc.)
+│   ├── components/    # Componentes reutilizables de UI
+│   ├── hooks/         # Custom hooks (lógica reutilizable)
+│   ├── layouts/       # Estructuras de página (Layout principal, Auth)
+│   ├── libs/          # Configuraciones de librerías (axios, ia, etc.)
+│   ├── locales/       # Archivos de internacionalización o textos
+│   ├── utils/         # Funciones de utilidad y helpers
+│   ├── views/         # Páginas principales de la aplicación
+│   ├── index.css      # Estilos globales
+│   ├── main.jsx       # Punto de entrada de la aplicación
+│   └── router.jsx     # Configuración de rutas
+├── .env.local         # Variables de entorno (no trackeado)
+└── package.json       # Dependencias y scripts
 ```
 
 ## 🚀 Instalación y Uso
@@ -70,11 +73,16 @@ npm install
 
 ### 3️⃣ Configurar variables de entorno
 
-Crear un archivo .env en la raíz del proyecto y agregar la URL de la API:
+Crear un archivo `.env.local` en la raíz del proyecto (`client/`) y definir las siguientes variables:
 
+```env
 VITE_API_URL=http://localhost:3000/api
+VITE_OPENROUTER_API=tu_api_key_de_openrouter
+VITE_CLOUDINARY_URL=tu_url_de_cloudinary
+VITE_CLOUDINARY_UPLOAD_PRESET=tu_upload_preset
+```
 
-Ajustar la URL según el entorno de desarrollo o producción.
+Es importante contar con las credenciales de **Cloudinary** (para subida de imágenes) y **OpenRouter** (para funcionalidades de IA).
 
 ### 4️⃣ Ejecutar el proyecto
 
